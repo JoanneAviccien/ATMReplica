@@ -14,10 +14,10 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 </details>
 
 ## Progress Pengerjaan program
-- Fitur login
-- Fitur lihat informasi saldo
-- Fitur Transfer Uang
-- Fitur daftar mutasi per periode
-- Fitur ambil uang
-- Fitur Pelayanan
-- Fitur Pembayaran
+- [] Fitur login
+- [] Fitur lihat informasi saldo
+- [] Fitur Transfer Uang
+- [] Fitur daftar mutasi per periode
+- [] Fitur ambil uang
+- [] Fitur Pelayanan
+- [] Fitur Pembayaran

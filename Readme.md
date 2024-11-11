@@ -1,4 +1,5 @@
 # Replica ATM (Tugas Besar)
+
 ## Made by PT Bawa Cuan Aman
 
 Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman semester 1
@@ -15,6 +16,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 </details>
 
 ## Progress Pengerjaan program
+
 - [ ] Fitur login
 - [ ] Fitur lihat informasi saldo
 - [ ] Fitur Transfer Uang
@@ -22,3 +24,4 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [ ] Fitur ambil uang
 - [ ] Fitur Pelayanan
 - [ ] Fitur Pembayaran
+      asdasdadasasdasadwasdadw

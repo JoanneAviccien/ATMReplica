@@ -9,7 +9,8 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
     <ul>
         <li>Fitur login (maksimal kesalahan input password 3x)</li>
         <li>Fitur lihat informasi saldo</li>
-        <li>Fitur Transfer Uang (Limit transfer perhari tergantung dari jenis rekening)Setiap jenis rekening memiliki limit harian yang berbeda. Misalnya:</li>
+        <li>Fitur Transfer Uang (Limit transfer perhari tergantung dari jenis rekening)Setiap jenis rekening memiliki limit harian yang berbeda.
+			Misalnya:</li>
         <li>Rekening Silver: Transfer maksimal Rp10 juta/hari, tarik tunai maksimal Rp5 juta/hari.</li>
         <li>Rekening Gold: Transfer maksimal Rp20 juta/hari, tarik tunai maksimal Rp10 juta/hari.<li/>
         <li>Rekening Platinum: Transfer maksimal Rp50 juta/hari, tarik tunai maksimal Rp20 juta/hari.</li>

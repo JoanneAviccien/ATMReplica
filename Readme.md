@@ -14,6 +14,8 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Fitur ambil uang (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
         <li>Fitur Pelayanan (Ubah password, ubah alamat e-mail, enable/disable kartu atm)</li>
         <li>Fitur Pembayaran (bayar listrik, pdam, top up, pajak)</li>
+        <li>Fitur Pembuatan rekening</li>
+        <li>Fitur Hapus Otomatis rekening (setelah di disable 30-hari)</li>
     </ul>
 </details>
 

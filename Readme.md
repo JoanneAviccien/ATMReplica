@@ -49,3 +49,5 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [Mario75871](https://github.com/Mario75871)
 
 ## Data Yang Diolah
+- Nomor rekening
+- Pin

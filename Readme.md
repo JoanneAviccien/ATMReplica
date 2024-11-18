@@ -49,5 +49,11 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [Mario75871](https://github.com/Mario75871)
 
 ## Data Yang Diolah
-- Nomor rekening
-- Pin
+| Tipe data | Isi Data |
+| :----: | :---- |
+| int | Nomor rekening |
+| int | Pin |
+| int | Saldo |
+| str | Email |
+| int | Nomor Kartu |
+| bool | Kondisi Blokir nomor kartu |

@@ -9,9 +9,13 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
     <ul>
         <li>Fitur login (maximal kesalahan input password 3x)</li>
         <li>Fitur lihat informasi saldo</li>
-        <li>Fitur Transfer Uang (Limit transfer perhari tergantung dari jenis rekening)</li>
-        <li>Fitur daftar mutasi per periode (mingguan/bulanan/per periode tertentu)</li>
-        <li>Fitur ambil uang (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
+        <li>Fitur Transfer Uang (Limit transfer perhari tergantung dari jenis rekening) 
+            Setiap jenis rekening memiliki limit harian yang berbeda. Misalnya:
+            Rekening Silver: Transfer maksimal Rp10 juta/hari, tarik tunai maksimal Rp5 juta/hari.
+            Rekening Gold: Transfer maksimal Rp20 juta/hari, tarik tunai maksimal Rp10 juta/hari.
+            Rekening Platinum: Transfer maksimal Rp50 juta/hari, tarik tunai maksimal Rp20 juta/hari.</li>
+        <li>Fitur Daftar mutasi per periode (mingguan/bulanan/per periode tertentu)</li>
+        <li>Fitur Tarik Tunai (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
         <li>Fitur Pelayanan (Ubah password, ubah alamat e-mail, enable/disable kartu atm)</li>
         <li>Fitur Pembayaran (bayar listrik, pdam, top up, pajak)</li>
         <li>Fitur Pembuatan rekening</li>

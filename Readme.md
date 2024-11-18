@@ -10,15 +10,16 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Fitur login (maximal kesalahan input password 3x)</li>
         <li>Fitur lihat informasi saldo</li>
         <li>Fitur Transfer Uang (Limit transfer perhari tergantung dari jenis rekening)</li>
-        <li>Fitur daftar mutasi per periode (mingguan/bulanan/per periode tertentu)</li>
-        <li>Fitur ambil uang (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
+        <li>Fitur Daftar mutasi per periode (mingguan/bulanan/per periode tertentu)</li>
+        <li>Fitur Tarik Tunai (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
         <li>Fitur Pelayanan (Ubah password, ubah alamat e-mail, enable/disable kartu atm)</li>
         <li>Fitur Pembayaran (bayar listrik, pdam, top up, pajak)</li>
         <li>Fitur Pembuatan rekening</li>
         <li>Fitur Hapus Otomatis rekening (setelah di disable 30-hari)</li>
         <li>Fitur Ganti Bahasa Indonesia atau Inggris</li>
         <li>Fitur Penarikan Uang Rp.50.000 atau Rp.100.000</li>
-        <li>Fitur Ganti Bahasa Indonesia atau Inggris</li>
+        <li>Fitur Biaya Transfer ke bank lain: Rp6.500 per transaksi.</li>
+        
     </ul>
 </details>
 

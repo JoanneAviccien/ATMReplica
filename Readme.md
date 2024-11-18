@@ -20,6 +20,10 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Fitur Pembayaran (bayar listrik, pdam, top up, pajak)</li>
         <li>Fitur Pembuatan rekening</li>
         <li>Fitur Hapus Otomatis rekening (setelah di disable 30-hari)</li>
+        <li>Fitur Ganti Bahasa Indonesia atau Inggris</li>
+        <li>Fitur Penarikan Uang Rp.50.000 atau Rp.100.000</li>
+        <li>Fitur Biaya Transfer ke bank lain: Rp6.500 per transaksi.</li>
+        
     </ul>
 </details>
 
@@ -34,6 +38,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [ ] Fitur Pembayaran
 
 ## Anggota PT Bawa Cuan Aman
+
 - [JoanneAviccien](https://github.com/JoanneAviccien)
 - [Zefraz](https://github.com/ZEFRAZ)
 - [Mario75871](https://github.com/Mario75871)

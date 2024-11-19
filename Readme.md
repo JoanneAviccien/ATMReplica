@@ -15,7 +15,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Rekening Platinum: Transfer maksimal Rp50 juta/hari, tarik tunai maksimal Rp20 juta/hari.</li>
         <li>Fitur Daftar mutasi per periode (mingguan/bulanan/per periode tertentu)</li>
         <li>Fitur Tarik Tunai (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
-        <li>Fitur Pelayanan (Ubah password, ubah alamat e-mail, enable/disable kartu atm)</li>
+        <li>Fitur Pelayanan (Ubah pin, ubah alamat e-mail, enable/disable kartu atm)</li>
         <li>Fitur Pembayaran (bayar listrik, pdam, top up, pajak)</li>
         <li>Fitur Pembuatan rekening</li>
         <li>Fitur Hapus Otomatis rekening (setelah di disable 30-hari)</li>
@@ -28,6 +28,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Fitur Mencetak Kartu, dengan syarat sudah memiliki rekening</li>
         <li>Fitur menentukan penarikan nominal pecahan secara kombinasi</li>
         <li>Fitur Penjadwalan Pembayaran Tagihan</li>
+        <li>Fitur Struk setelah selesai</li>
     </ul>
 
 </details>

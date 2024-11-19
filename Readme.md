@@ -57,3 +57,8 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 | str | Email |
 | int | Nomor Kartu |
 | bool | Kondisi Blokir nomor kartu |
+
+## Catatan Tambahan
+<ul>
+<li>Membuat fitur clear di pin ATM</li>
+</ul>

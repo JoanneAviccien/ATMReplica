@@ -27,7 +27,6 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Fitur Logout Otomatis jika 30 detik tidak melakukan apapun</li>
         <li>Fitur Mencetak Kartu, dengan syarat sudah memiliki rekening</li>
         <li>Fitur menentukan penarikan nominal pecahan secara kombinasi</li>
-        <li>Fitur Penjadwalan Pembayaran Tagihan</li>
         <li>Fitur Struk setelah selesai</li>
     </ul>
 

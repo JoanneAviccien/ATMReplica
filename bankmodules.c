@@ -549,7 +549,6 @@ void savelimit(limit in)
     }
         
     fwrite(&in, sizeof(limit), 1, save);
-    fflush(save);
     fclose(save);
 }
 
@@ -676,6 +675,8 @@ int ceklimit(akun in, limit inlim)
 void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
     akun tujuan;
+    mutasi tujuanbln;
+    mutasi tujuanthn;
     char norektujuan[17];
     int jumlahTransfer;
     retry:
@@ -684,6 +685,8 @@ void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi
     norektujuan[strcspn(norektujuan, "\n")] = 0;
     fflush(stdin);
     sloadkartu(norektujuan, &tujuan);
+    sloadperbulan(norektujuan, &tujuanbln);
+    sloadpertahun(norektujuan, &tujuanthn);
     if(strcmp(norektujuan, tujuan.nokartu) == 0)
     {
         printf("\nMasukkan Jumlah yang Akan Ditransfer: Rp.");
@@ -700,10 +703,16 @@ void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi
             kondisibaru->saldo = saldo.saldo;
             tujuan.saldo += jumlahTransfer;
             outlim->tfhariini = jumlahTransfer;
-            monout->keluar = jumlahTransfer;
-            yearout->keluar = jumlahTransfer;
+            monout->keluar += jumlahTransfer;
+            yearout->keluar += jumlahTransfer;
+            tujuanbln.masuk += jumlahTransfer;
+            tujuanthn.masuk += jumlahTransfer;
+
+
             printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
             printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
+            ssavepertahunmasuk(tujuan.nokartu, tujuanthn);
+            ssaveperbulanmasuk(tujuan.nokartu, tujuanbln);
             ssavekartu(tujuan.nokartu, tujuan);
         } 
         else
@@ -744,8 +753,8 @@ void transferother(akun saldo, akun * kondisibaru, limit in, limit* outlim, muta
         saldo.saldo -= jumlahTransfer;
         outlim->tfhariini = jumlahTransfer - 5000;
         kondisibaru->saldo = saldo.saldo;
-        monout->keluar = jumlahTransfer;
-        yearout->keluar = jumlahTransfer;
+        monout->keluar += jumlahTransfer;
+        yearout->keluar += jumlahTransfer;
         printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer-(5000), norektujuan);
         printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
     } 
@@ -1159,9 +1168,11 @@ void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly)
     int thncmp;
     int blncmp;
     sloadkartu(loaded.nokartu, &loaded);
+    sloadlimit(loaded.nokartu, &loadedlim);
     if(loaded.statuskartu == 1)
     {
         retry:
+        system("cls");
         akun temp = loaded;
         limit templim = loadedlim;
         mutasi tempmon = monthly;
@@ -1173,7 +1184,6 @@ void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly)
         resetbulan(loaded.nokartu, tempmon, blncmp);
         resettahun(loaded.nokartu, tempyear, thncmp);
         resetlimit(loaded.nokartu, templim, saatini);
-        system("cls");
 
         sloadperbulan(loaded.nokartu, &monthly);
         sloadpertahun(loaded.nokartu, &yearly);
@@ -1467,21 +1477,6 @@ void masukKartuATM()
 		goto masukKartu;
 	}
 	
-}
-
-int Biayaadmin(int saldo, int tipekartu){
-    if(tipekartu == 1){
-        saldo = saldo - 10000;
-    } 
-    else if(tipekartu == 2){
-        saldo = saldo - 20000;
-    } 
-    else
-    {
-        saldo = saldo - 50000;
-    }
-    printf("Saldo :%d", saldo);
-    return saldo;
 }
 
 #endif

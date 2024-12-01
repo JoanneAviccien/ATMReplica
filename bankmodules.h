@@ -145,6 +145,4 @@ void login(akun* diload, limit* loadedlim, mutasi* monthly, mutasi* yearly);
 
 void masukKartuATM();
 
-int Biayaadmin(int saldo, int tipekartu);
-
 #endif

@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1731918211 source:c:\users\han\documents\github\atmreplica\codeblocksave\testingbank\main.c
+	<curses.h>
+
+1731912221 c:\users\han\documents\github\pdcurses\curses.h
+	<stdarg.h>
+	<stddef.h>
+	<stdio.h>
+	<wchar.h>
+	<stdbool.h>
+

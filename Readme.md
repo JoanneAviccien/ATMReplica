@@ -37,7 +37,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [x] Fitur Buat Akun
 - [x] Fitur lihat informasi saldo
 - [x] Fitur Transfer Uang
-- [x] Fitur ambil uang
+- [x] Fitur Penarikan Tunai
 - [x] Fitur Pembayaran
 - [ ] Fitur daftar mutasi per periode
 - [ ] Fitur Pelayanan

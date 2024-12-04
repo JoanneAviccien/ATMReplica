@@ -9,13 +9,13 @@
 
 typedef struct
 {
-    char nokartu[16];
-    char gmail[30];
-    char pin[6];    
-    char norek[10];
+    char nokartu[17];
+	char gmail[50];
+    char pin[7];
+    char norek[11];
     int saldo;
     int tipekartu;
-    char nama[25];
+    char nama[50];
     bool statuskartu;
 } akun;
 
@@ -32,35 +32,25 @@ typedef struct
     int saldo;
 } mutasi;
 
-void generatornokartu(char nokartu[16])
+void generatornokartu(char nokartu[17])
 {
-	int rep1 = 0,batasbawah1 = 0, batasatas1 =9;
-    printf("Harap tunggu (Pembuatan nomor kartu)...");
-	srand(time(NULL));
-	while(rep1 < 16)
-	{
-		int genkartu = (rand() % (batasatas1 - batasbawah1 + 1)) + batasbawah1;
-		char temp[0];
-		sprintf(temp, "%d", genkartu);
-		nokartu[rep1] = genkartu;
-		++rep1;
-	}
+	printf("\nHarap tunggu (Pembuatan nomor kartu)...");
+    srand(time(NULL));
+    for (int rep = 0; rep < 16; rep++) {
+        nokartu[rep] = '0' + (rand() % 10); 
+    }
+    nokartu[16] = '\0';
 }
 
-void generatornorek(char norek[10])
+void generatornorek(char norek[11])
 {
-	int rep2 = 0,batasbawah2 = 0, batasatas2 =9;
-    printf("\nHarap tunggu (Pembuatan nomor rekening)...");
+	printf("\nHarap tunggu (Pembuatan nomor rekening)...");
     Sleep(2000);
-	srand(time(NULL));
-	while(rep2 < 10)
-	{
-		int gennorek = (rand() % (batasatas2 - batasbawah2 + 1)) + batasbawah2;
-		char temp[0];
-		sprintf(temp, "%d", gennorek);
-		norek[rep2] = gennorek;
-		++rep2;
-	}
+    srand(time(NULL));
+    for (int rep = 0; rep < 10; rep++) {
+        norek[rep] = '0' + (rand() % 10); 
+    }
+    norek[10] = '\0';
 }
 
 void buatakun(akun * new)
@@ -80,11 +70,12 @@ void buatakun(akun * new)
 	new->pin[strcspn(new->pin, "\n")] = 0;
     fflush(stdin);
 	
-    printf("Pilih tipe kartu anda (Masukan Nomor opsi):\n");
+	printf("===========================================\n");
     printf("1.Silver\n");
     printf("2.Gold\n");
     printf("3.Platinum\n");
-    scanf("%d", &((* new).tipekartu));
+    printf("Pilih tipe kartu anda (Masukan Nomor opsi): ");
+    scanf("%d", &new->tipekartu);
     fflush(stdin);
 	
     new->saldo = 50000;
@@ -96,7 +87,7 @@ void buatakun(akun * new)
 	
 }
 
-void cekstatus(int statuskartu)
+char cekstatus(int statuskartu)
 {
 	char cekstatus[10];
 
@@ -108,10 +99,11 @@ void cekstatus(int statuskartu)
 	{
 		strcpy(cekstatus,"Blocked");
 	}
-        
+
+    return cekstatus;
 }
 
-void cektipe(int tipekartu)
+char cektipe(int tipekartu)
 {
 
     char cektipe[9];
@@ -127,24 +119,25 @@ void cektipe(int tipekartu)
 	else if (tipekartu == 3)
 	{
 		strcpy(cektipe, "Platinum");
-	}
-    
+	}   
+
+    return cektipe;
+
 }
 
 void login()
 {
-    printf("");
-    scanf(""); 
-}
 
+}
 
 int Opsibhs ()
 {
-    
+
     char bhs[1];
     printf("Pilih Bahasa\n 1. Inggris\n 2. Indonesia");
     printf("Masukan Pilihan :");
     scanf("%s", bhs);
+
 }
  
 void tarikTunai(int *saldo)
@@ -197,7 +190,7 @@ int transferBCA(int *saldo)
     } 
     else
     {
-            printf("Transfer Gagal. Saldo Anda Tidak Mencukupi");
+        printf("Transfer Gagal. Saldo Anda Tidak Mencukupi");
     }
 }
 
@@ -224,6 +217,7 @@ int transferother(int *saldo)
             printf("Transfer Gagal. Saldo Anda Tidak Mencukupi");
     }
 }
+
 void setorTunai(int *saldo)
 {
     int nominalSetor;
@@ -271,10 +265,10 @@ char newPW()
     }
 }
 
-char changePW(char pin[6]){
-    char pinlama[6];
-    char pinbaru[6];
-    char pinbaru2[6];
+char changePW(char pin[7]){
+    char pinlama[7];
+    char pinbaru[7];
+    char pinbaru2[7];
     int i = 1;
     While(i<3){
         printf("Ubah Pin\n");
@@ -283,10 +277,10 @@ char changePW(char pin[6]){
         int res = strcmp(pinlama, pin);
         if(res == 0){
             printf("Sandi Benar \n");
-            i=i+4
+            i=i+4;
         }else(){
-            printf("Sandi Salan Masukan Kembali sandi \n");
-            i= i+1
+            printf("Sandi Salah! Masukan Kembali sandi! \n");
+            i= i+1;
         }
         newPW();
     }

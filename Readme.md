@@ -5,7 +5,7 @@
 Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman semester 1
 
 <details>
-    <summary>List Fitur Program</summary>
+    <summary>List Fitur Program (Penambahan)</summary>
     <ul>
         <li>Fitur login (maksimal kesalahan input password 3x)</li>
         <li>Fitur lihat informasi saldo</li>
@@ -32,39 +32,19 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 
 </details>
 
-## Progress Pengerjaan program
+## Progress Pengerjaan program (Fitur Utama)
 
-- [ ] Fitur login
-- [ ] Fitur lihat informasi saldo
-- [ ] Fitur Transfer Uang
+- [x] Fitur Buat Akun
+- [x] Fitur lihat informasi saldo
+- [x] Fitur Transfer Uang
+- [x] Fitur ambil uang
+- [x] Fitur Pembayaran
 - [ ] Fitur daftar mutasi per periode
-- [ ] Fitur ambil uang
 - [ ] Fitur Pelayanan
-- [ ] Fitur Pembayaran
+- [ ] Fitur login
 
 ## Anggota PT Bawa Cuan Aman
 
 - [JoanneAviccien](https://github.com/JoanneAviccien)
 - [Zefraz](https://github.com/ZEFRAZ)
 - [Mario75871](https://github.com/Mario75871)
-
-## Data Yang Diolah
-
-| Tipe data | Isi Data                   |
-| :-------: | :------------------------- |
-|    int    | Nomor rekening             |
-|    int    | Pin                        |
-|    int    | Saldo                      |
-|    str    | Email                      |
-|    int    | Nomor Kartu                |
-|   bool    | Kondisi Blokir nomor kartu |
-
-## Catatan Tambahan
-
-<ul>
-<li>Membuat fitur clear di pin ATM</li>
-<li>Membuat fitur cancel di pin ATM</li>
-<li>Membuat fitur enter di pin ATM</li>
-</ul>
-
-TEST PERUBAHAN README DALAM BRANCH UPDATE JOHAN

@@ -125,6 +125,25 @@ char cektipe(int tipekartu)
 
 }
 
+void masukKartuATM();
+{
+	char masukKartu;
+	printf("SELAMAT DATANG DI ATM BANK BAWA CUAN AMAN\n\n");
+	printf("SILAHKAN MASUKKAN KARTU ANDA...\n");
+	printf("TEKAN 'ENTER' UNTUK MEMASUKKAN KARTU...\n");
+
+	masukKartu = getchar();
+
+	if (masukKartu == '\n') 
+	{
+		printf("KARTU BERHASIL DIMASUKKAN. SELAMAT DATANG DI LAYANAN ATM BCA\n");
+	} 
+	else 
+	{
+		printf("ANDA BELUM MEMASUKKAN KARTU. SILAHKAN COBA LAGI.\n");
+	}
+}
+
 void login()
 {
 

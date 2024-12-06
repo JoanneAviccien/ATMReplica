@@ -124,9 +124,9 @@ void opsimutasi()
     char opsi;
     printf("1. Pengeluaran\n");
     printf("2. Pemasukan\n");
-    printf("3. Kembali\\n");
+    printf("3. Kembali\n");
     printf("Masukkan pilihan :");
-    scanf("%c", opsi);
+    scanf("%c", &opsi);
 }
 
 void masukKartuATM()
@@ -155,7 +155,7 @@ void masukKartuATM()
 	
 }
 
-int menu(void)
+int menu();
 {
     int width = 80;
     char str[] = "MENU";
@@ -171,7 +171,7 @@ int menu(void)
  	printf("4. Transfer\n");
 	printf("5. Pembayaran\n");
 	printf("6. Virtual Account\n");
-    prtinf("7. Pelayanan\n");
+    printf("7. Pelayanan\n");
     printf("8. Mutasi rekening");
 	printf("Masukan Pilihanmu :");
 	scanf("%s", opsi);
@@ -192,9 +192,9 @@ int menu(void)
     }else if (opsi == 8)
     {
         opsimutasi();
-    }else(){
+    }else{
         printf("Input tidak valid");
-        Menu(void);
+        Menu();
     }
     return(0);
 }
@@ -205,9 +205,9 @@ void MenuPelayanan(){
     printf("Masukan Pilihan :, %s", Opsi);
     if(Opsi == 1){
         changePW();
-    }else if(){
+    }else if(Opsi == 2){
         changeEmail();
-    }else(){
+    }else{
         printf("Input tidak valid");
         MenuPelayanan();
     }
@@ -304,7 +304,7 @@ void gettipe(int tipekartu, char cektipe[9])
 
 void blokirkartu(akun* kartu)
 {
-    akun->statuskartu = false;
+    kartu->statuskartu = false;
 }   
 
 void login(char *nokartu, char *pin)
@@ -331,10 +331,10 @@ void login(char *nokartu, char *pin)
                 if(strcmp(pininput, pin) == 0)
                 {
                     printf("Pin Benar");
-                    menu(void);
+                    menu();
                     goto
                 } else
-                prinf("Pin Salah!, Masukan Pin kembali!\n")
+                printf("Pin Salah!, Masukan Pin kembali!\n")
                 ++i;
             }
             blokirkartu(akun* kartu);
@@ -376,7 +376,7 @@ void cekSaldo(int saldo)
     printf("Saldo Anda Saat Ini Adalah: Rp.%d", saldo);
 }
 
-char OpsiBank()(
+char OpsiBank();
     int Opsibank;
     printf("1. Transfer sesama Bank \n 2. Transfer Beda Bank \n");
     printf("Masukkan Pilihan :");
@@ -385,7 +385,7 @@ char OpsiBank()(
         transferBCA();
     }else if (Opsibank == 2){
         transferother();
-    }else(){
+    }else{
     printf("Input Invalid")
     }
 
@@ -712,9 +712,9 @@ char NextorNot(){
     printf("Apakah anda ingin melanjutkan transaksi :\n");
     printf("1. Ya\n");
     printf("2. No");
-    scanf("%c", Opsi);
+    scanf("%c", &Opsi);
     if(Opsi == 1){
-        menu(void);
+        menu();
     }else if (Opsi == 2)
     {
         cetakStruk(datastruk struk, int jumlahTransaksi);

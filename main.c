@@ -6,5 +6,13 @@
 
 int main()
 {	
+
+	akun loaded;
+	akun input;
+
+	Logo();
+	masukKartuATM();
+	login(char *nokartu, char *pin);
+	menu(void);
 	return 0;
 }

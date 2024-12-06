@@ -40,7 +40,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [x] Fitur ambil uang
 - [x] Fitur Pembayaran
 - [ ] Fitur daftar mutasi per periode
-- [ ] Fitur Pelayanan
+- [x] Fitur Pelayanan
 - [ ] Fitur login
 
 ## Anggota PT Bawa Cuan Aman

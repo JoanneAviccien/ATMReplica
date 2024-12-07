@@ -1,16 +1,11 @@
 #ifndef BANK_H
 #define BANK_H
-#define UP_ARROW 72
-#define DOWN_ARROW 80
-#define LEFT_ARROW 75
-#define RIGHT_ARROW 77
 
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <windows.h>
 #include <time.h>
-#include <conio.h>
 
 typedef struct
 {
@@ -23,12 +18,6 @@ typedef struct
     char nama[50];
     bool statuskartu;
 } akun;
-
-typedef struct
-{
-    char norektujuan[10];
-    char namatujuan[25];
-} datastruk;
 
 typedef struct
 {
@@ -50,6 +39,18 @@ typedef struct
     waktu periode;
 } mutasi;
 
+void Logo() {
+printf("+______________________________+\n");
+printf("| $$$$$$$    $$$$$$    $$$$$$  |\n");
+printf("| $$    $$  $$    $$  $$    $$ |\n");
+printf("| $$    $$  $$        $$    $$ |\n");
+printf("| $$$$$$$   $$        $$$$$$$$ |\n");
+printf("| $$    $$  $$        $$    $$ |\n");
+printf("| $$    $$  $$    $$  $$    $$ |\n");
+printf("| $$$$$$$    $$$$$$   $$    $$ |\n");
+printf("+______________________________+\n\n");
+}   
+
 void saveakun(akun write)
 {
     FILE* save = fopen("datakartu.bin", "ab+");
@@ -64,7 +65,6 @@ void saveakun(akun write)
 
 void sloadkartu(char carikartu[17], akun * foundacc)
 {
-	int countline = 1;
     akun temp;
 	
 	FILE* load = fopen("datakartu.bin", "rb+");
@@ -84,6 +84,30 @@ void sloadkartu(char carikartu[17], akun * foundacc)
 
     fclose(load);
 }
+
+void ssavekartu(char carikartu[17], akun insertacc)
+{
+    int countline = 0;
+    akun temp;
+	
+	FILE* save = fopen("datakartu.bin", "rb+");
+    if(save == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+	
+	while(strcmp(temp.nokartu, carikartu) != 0)
+    {
+        fread(&temp, sizeof(akun), 1, save);
+		countline++;
+    }  
+	fseek(save, 0, SEEK_SET);
+	fseek(save, (countline-1)*sizeof(akun), SEEK_SET);
+	fwrite(&insertacc, sizeof(akun), 1, save);
+	fflush(save);	
+
+    fclose(save);
+}   
 
 void blokirakun(char kartu[17])
 {
@@ -105,22 +129,38 @@ void blokirakun(char kartu[17])
         fread(&load, sizeof(akun), 1, blokir);
 		countline++;
     }  
+	fseek(blokir, 0, SEEK_SET);
+	fseek(blokir, (countline-1)*sizeof(akun), SEEK_SET);
+	fwrite(&temp, sizeof(akun), 1, blokir);
+	fflush(blokir);	
+}
 
-    if(strcmp(load.nokartu, kartu) == 0 )
-	{
-		fseek(blokir, 0 , SEEK_SET);
-		fseek(blokir, sizeof(akun), SEEK_SET);
-		fwrite(&temp, sizeof(akun), 1, blokir);
-		fflush(blokir);
+void bukablokirakun(char kartu[17])
+{
+	akun temp;
+	akun load;
+	int countline = 0;
+	printf("Akun sudah tidak terblokir!");
+	sloadkartu(kartu, &temp);
+	temp.statuskartu = true;
+	
+	FILE* blokir = fopen("datakartu.bin", "rb+");
+	if(blokir == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
     }
 	
+	while(strcmp(load.nokartu, kartu) != 0)
+    {
+        fread(&load, sizeof(akun), 1, blokir);
+		countline++;
+    }  
+	fseek(blokir, 0, SEEK_SET);
+	fseek(blokir, (countline-1)*sizeof(akun), SEEK_SET);
+	fwrite(&temp, sizeof(akun), 1, blokir);
+	fflush(blokir);
 }
 
-void opsimutasi()
-{
-    system("cls");
-    
-}
 
 void monthlymutasi()
 {
@@ -145,167 +185,602 @@ void getsaatini(int*hari, int* bulan, int* tahun)
 	*tahun = hariini.tm_year + 1900;
 }
 
-void Logo() {
-    printf("     ################                                                           \n");
-    printf(" ###      #####      ##          #############         ##########    ###########\n");
-    printf(" #      #########      #        ################   ################ ############\n");
-    printf("##      #########      ##      ################# ################  #############\n");
-    printf("#    ##############     #      #######   ###### ################   #############\n");
-    printf("#   #################   #      ############### #######            ##############\n");
-    printf("#   #################   ##    ############### #######            ####### #######\n");
-    printf("#  ##################   ##    #######################           ################\n");
-    printf("#  *#################   #    #######   *##############*      ###################\n");
-    printf("##        #####   *    ##    ################# #################################\n");
-    printf(" #   ##           #    #    ################    #####################    #######\n");
-    printf("  ## ######## ######  ##    ##############        ##################     #######\n");
-    printf("     ################                       \n");
-}   
-           
-void getketerangan(int ket, char outket[19])
-{
-        if(ket == 1)
-		{
-            strcpy(outket, "Tarik Tunai");
-		}
-        else if(ket == 2)
-		{
-            strcpy(outket, "Transfer BCA");
-		}
-        else if(ket == 3)
-		{
-            strcpy(outket, "Transfer Bank lain");
-		}
-        else if(ket == 4)
-		{
-            strcpy(outket, "Setor Tunai");
-		}
-        else if(ket == 5)
-		{
-            strcpy(outket, "PDAM");
-		}
-        else if(ket == 6)
-		{
-            strcpy(outket, "PLN");
-		}
-        else if(ket == 7)
-		{
-            strcpy(outket, "Pajak");
-		}
-        else if(ket == 8)
-		{
-            strcpy(outket, "Pulsa");
-		}
-        else if(ket == 9)
-		{
-            strcpy(outket, "Tagihan");
-		}
-        else if(ket == 10)
-		{
-            strcpy(outket, "VA");
-		}
-        else
-		{
-            strcpy(outket, "-");
-		}
-}
-
 void opsimutasi()
 {
+    system("cls");
     char opsi;
     printf("1. Pengeluaran\n");
     printf("2. Pemasukan\n");
     printf("3. Kembali\n");
     printf("Masukkan pilihan :");
-    scanf("%c", &opsi);
+    opsi = fgetc(stdin);
+    fflush(stdin);
 }
 
-void masukKartuATM()
+void tarikTunai(akun saldo, datket info, akun * kondisibaru)
 {
-	char masukKartu;
-    system("cls");
-	printf("SELAMAT DATANG DI ATM BANK BAWA CUAN AMAN\n\n");
-	printf("SILAHKAN MASUKKAN KARTU ANDA...\n");
-	
-	masukKartu:	
-	printf("TEKAN 'ENTER' UNTUK MEMASUKKAN KARTU...\n");
-
-	masukKartu = getchar();
-
-	if (masukKartu == '\n') 
-	{
-		printf("KARTU BERHASIL DIMASUKKAN. SELAMAT DATANG DI LAYANAN ATM BCA\n");
-	} 
-	else 
-	{
-		printf("ANDA BELUM MEMASUKKAN KARTU. SILAHKAN COBA LAGI.\n");
-		
-		while (getchar() != '\n');
-		
-		goto masukKartu;
-	}
-	
-}
-
-int menu();
-{
-    int width = 80;
-    char str[] = "MENU";
-    char opsi[1];
-	    
-    int length = sizeof(str) - 1;
-    int pad = (length >= width) ? 0 : (width - length) / 2;
-    int ch;
-    printf("Tekan arrow key (Tekan ESC untuk keluar)\n");
-
-    printf("%*.*s%s\n", pad, pad, " ", str);
- 	printf("\n1. Cek Saldo\n");
- 	printf("2. Tarik Tunai\n");
- 	printf("3. Setor Tunai\n");
- 	printf("4. Transfer\n");
-	printf("5. Pembayaran\n");
-	printf("6. Virtual Account\n");
-    printf("7. Pelayanan\n");
-    printf("8. Mutasi rekening");
-	printf("Masukan Pilihanmu :");
-	scanf("%s", opsi);
-    if(opsi == 1){
-        cekSaldo(int saldo);
-    }else if(opsi == 2){
-        tarikTunai(int *saldo);
-    }else if(opsi == 3){
-        setorTunai(int *saldo);
-    }else if(opsi == 4){
-        OpsiBank();
-    }else if(opsi == 5){
-        pembayaranTagihan(int *saldo);
-    }else if(opsi == 6 ){
-        VA();
-    }else if(opsi == 7 ){
-        MenuPelayanan();
-    }else if (opsi == 8)
+    int uangDitarik;
+    retry:
+    printf("Masukkan Jumlah Uang yang Ingin Ditarik (Kelipatan Rp.50.000): ");
+    scanf("%d", &uangDitarik);
+    fflush(stdin);
+    if(saldo.saldo >= uangDitarik)
     {
-        opsimutasi();
-    }else{
-        printf("Input tidak valid");
-        Menu();
-    }
-    return(0);
-}
+        if(uangDitarik % 50000 != 0)
+        {
+            printf("Uang yang dimasukan tidak valid\n");
+        }
+        else{
+            saldo.saldo = saldo.saldo - uangDitarik;
+            kondisibaru->saldo = saldo.saldo;
 
-void MenuPelayanan(){
-    char Opsi[1];
-    printf("1. Ubah PIN\n2. Ubah email");
-    printf("Masukan Pilihan :, %s", Opsi);
-    if(Opsi == 1){
-        changePW();
-    }else if(Opsi == 2){
-        changeEmail();
-    }else{
-        printf("Input tidak valid");
-        MenuPelayanan();
+            info.transaksi = uangDitarik;
+            strcpy(info.ket, "Tarik Tunai");
+        }
+    }else
+    {
+        printf("Uang yang dimasukan tidak valid\n");
+        Sleep(1500);
+        goto retry;
     }
 }
 
+int VA(akun saldo, datket info, akun * kondisibaru)
+{
+    char VirtualAccount[20];
+    int Nominaldibayar;
+    VirtualA:
+    printf("Masukan No. Virtual Account \n");
+    fgets(VirtualAccount, sizeof(VirtualAccount), stdin);
+    VirtualAccount[strcspn(VirtualAccount, "\n")] = 0;
+    fflush(stdin);
+    printf("Masukkan Jumlah Nominal :");
+    scanf("%d", &Nominaldibayar);
+    fflush(stdin);
+    if(Nominaldibayar > saldo.saldo)
+    {
+        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
+        printf("Nominal yang dibayarkan     : Rp.%d\n", Nominaldibayar);
+        printf("Saldo Anda Saat Ini         : Rp.%d\n", saldo.saldo);
+        goto VirtualA;
+    }
+    else
+    {
+        printf("Transaksi berhasil");
+        saldo.saldo = saldo.saldo - Nominaldibayar;
+        kondisibaru->saldo = saldo.saldo;
+        info.transaksi = Nominaldibayar;
+        strcpy(info.ket, "VA");
+    }
+    
+}
+
+void cekSaldo(int saldo)
+{
+    printf("Saldo Anda Saat Ini Adalah: Rp.%d", saldo);
+}
+
+
+void transferBCA(akun saldo, datket info, akun * kondisibaru)
+{
+    akun tujuan;
+    char norektujuan[17];
+    int jumlahTransfer;
+    retry:
+    printf("\nMasukkan Nomor Rekening Tujuan: ");
+    fgets(norektujuan, sizeof(norektujuan), stdin);
+    norektujuan[strcspn(norektujuan, "\n")] = 0;
+    fflush(stdin);
+    sloadkartu(norektujuan, &tujuan);
+    if(strcmp(norektujuan, tujuan.nokartu) == 0)
+    {
+        printf("\nMasukkan Jumlah yang Akan Ditransfer: Rp.");
+        scanf("%d", &jumlahTransfer);
+        fflush(stdin);
+        
+        if(saldo.saldo >= jumlahTransfer)
+        {
+            saldo.saldo -= jumlahTransfer;
+            *kondisibaru = saldo;
+            kondisibaru->saldo = saldo.saldo;
+            tujuan.saldo += jumlahTransfer;
+            printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
+            printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
+            info.transaksi = jumlahTransfer;
+            strcpy(info.ket, "Transfer BCA");
+            ssavekartu(tujuan.nokartu, tujuan);
+        } 
+        else
+        {
+            printf("\nTransfer Gagal. Saldo Anda Tidak Mencukupi");
+        }
+    }
+    else
+    {
+        printf("\nNomor Tidak Terdaftar dalam database!");
+        Sleep(3000);
+        goto retry;
+    }
+}
+
+void transferother(akun saldo, datket info, akun * kondisibaru)
+{
+
+    char norektujuan[20];
+    int jumlahTransfer;
+    printf("Masukkan Nomor Rekening Tujuan: ");
+    fgets(norektujuan, sizeof(norektujuan), stdin);
+    norektujuan[strcspn(norektujuan, "\n")] = 0;
+    fflush(stdin);
+
+    printf("Masukkan Jumlah yang Akan Ditransfer: Rp.");
+    scanf("%d", &jumlahTransfer);
+    fflush(stdin);
+    
+    
+    if(saldo.saldo >= jumlahTransfer)
+    {
+        jumlahTransfer = jumlahTransfer + 2500;
+        *kondisibaru = saldo;
+        saldo.saldo -= jumlahTransfer;
+        kondisibaru->saldo = saldo.saldo;
+        printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
+        printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
+        info.transaksi = jumlahTransfer;
+        strcpy(info.ket, "Transfer Bank lain");
+    } 
+    else
+    {
+            printf("Transfer Gagal. Saldo Anda Tidak Mencukupi");
+    }
+}
+
+void OpsiBank(akun loaded, datket out, akun * kondisibaru)
+{
+    retry:
+    sloadkartu(loaded.nokartu, &loaded);
+    akun temp;
+    *kondisibaru = temp;
+    char Opsibank;
+    printf("1. Transfer sesama Bank \n2. Transfer Beda Bank \n");
+    printf("Masukkan Pilihan: ");
+    Opsibank = fgetc(stdin);
+    fflush(stdin);
+    if(Opsibank == '1')
+    {
+        transferBCA(loaded, out, &temp);
+        ssavekartu(loaded.nokartu, temp);
+    }
+    else if (Opsibank == '2')
+    {
+        transferother(loaded, out, &temp);
+        ssavekartu(loaded.nokartu, temp);
+    }
+    else
+    {
+        printf("Input Invalid");
+        goto retry;
+    }
+}
+
+void pembayaranPDAM(akun saldo, datket info, akun * kondisibaru)
+{
+    char nomorPDAM[25];
+    int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 250000};
+    int biayaAdmin = 2500;
+    srand(time(NULL));
+    int angka_acak = (rand() % 10);
+    printf("\n===== Pembayaran PDAM =====\n");
+    printf("Masukkan Nomor ID Pelanggan PDAM (Format: PDAMXXXXX):");
+    fgets(nomorPDAM, sizeof(nomorPDAM), stdin);
+    nomorPDAM[strcspn(nomorPDAM, "\n")] = 0;
+    fflush(stdin);
+
+    if(strncmp(nomorPDAM, "PDAM", 4) != 0)
+    {
+        printf("Nomor ID Pelanggan Tidak Valid ! Nomor Harus Diawali 'PDAM'\n");
+        return;
+    }
+
+    printf("Jumlah Tagihan yang Akan Dibayar: Rp. %d", jumlahBayar[angka_acak]);
+    int totalBayar = jumlahBayar[angka_acak] + biayaAdmin;
+
+    if (saldo.saldo >= totalBayar)
+    {
+        saldo.saldo -= totalBayar;
+        kondisibaru->saldo = saldo.saldo;
+        printf("\nPembayaran Berhasil.\n");
+        printf("Jenis Tagihan       : PDAM\n");
+        printf("Nomor Tujuan        : %s\n", nomorPDAM);
+        printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar[angka_acak]);
+        printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
+        printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
+        info.transaksi = totalBayar;
+        strcpy(info.ket, "PDAM");
+    }
+    else
+    {
+        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
+        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalBayar);
+        printf("Saldo Anda Saat Ini     : Rp.%d\n", saldo.saldo);
+    }
+  
+}
+
+void pembayaranPLN(akun saldo, datket info, akun * kondisibaru)
+{
+    char nomorPLN[25];
+    int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 25000};
+    int biayaAdmin = 2500;
+
+    srand(time(NULL));
+    int angka_acak = (rand() % 10);
+    printf("\n===== Pembayaran PLM =====\n");
+    printf("Masukkan Nomor ID Pelanggan PLN (Format: PLNXXXXX):");
+    fgets(nomorPLN, sizeof(nomorPLN), stdin);
+    nomorPLN[strcspn(nomorPLN, "\n")] = 0;
+    fflush(stdin);
+
+    if(strncmp(nomorPLN, "PLN", 3) != 0)
+    {
+        printf("Nomor ID Pelanggan Tidak Valid ! Nomor Harus Diawali 'PLN'\n");
+        return;
+    }
+
+    printf("Masukkan Jumlah Tagihan yang Akan Dibayar: Rp.");
+    printf("Nominal yang dibayar : %d", jumlahBayar[angka_acak]);
+    
+    int totalBayar = jumlahBayar[angka_acak] + biayaAdmin;
+
+    if (saldo.saldo >= totalBayar)
+    {
+        saldo.saldo -= totalBayar;
+        kondisibaru->saldo = saldo.saldo;
+        printf("\nPembayaran Berhasil.\n");
+        printf("Jenis Tagihan       : PLN\n");
+        printf("Nomor Tujuan        : %s\n", nomorPLN);
+        printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar[angka_acak]);
+        printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
+        printf("Total Bayar         : Rp. %d\n", totalBayar);
+        printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
+        info.transaksi = totalBayar;
+        strcpy(info.ket, "PLN");
+    }
+    else
+    {
+        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
+        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalBayar);
+        printf("Saldo Anda Saat Ini     : Rp.%d\n", saldo.saldo);
+    }
+
+}
+
+void pembayaranPajak(akun saldo, datket info, akun * kondisibaru)
+{
+    char nomorNPWP[25];
+    int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 25000};
+    int biayaAdmin = 2500;
+
+    srand(time(NULL));
+    int angka_acak= (rand() % 10);
+    printf("\n===== Pembayaran Pajak =====\n");
+    printf("Masukkan Nomor Objek Pajak: ");
+    fgets(nomorNPWP, sizeof(nomorNPWP), stdin);
+    nomorNPWP[strcspn(nomorNPWP, "\n")] = 0;
+    fflush(stdin);
+
+    printf("Masukkan Jumlah Tagihan yang Akan Dibayar: Rp. %d", jumlahBayar[angka_acak]);
+    
+    int totalBayar = jumlahBayar[angka_acak] + biayaAdmin;
+
+    if (saldo.saldo >= totalBayar)
+    {
+        saldo.saldo -= totalBayar;
+        kondisibaru->saldo = saldo.saldo;
+        printf("\nPembayaran Berhasil.\n");
+        printf("Jenis Tagihan       : Pajak\n");
+        printf("Nomor Tujuan        : %s\n", nomorNPWP);
+        printf("Jumlah Tagihan      : Rp. %d\n", jumlahBayar[angka_acak]);
+        printf("Biaya Administrasi  : Rp. %d\n", biayaAdmin);
+        printf("Total Bayar         : Rp. %d\n", totalBayar);
+        printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
+        info.transaksi = totalBayar;
+        strcpy(info.ket, "Pajak");
+    }
+    else
+    {
+        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
+        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalBayar);
+        printf("Saldo Anda Saat Ini     : Rp.%d\n", saldo.saldo);
+    }
+}
+
+void pembayaranPulsa(akun saldo, datket info, akun * kondisibaru)
+{
+    char nomorHP[14];
+    int jumlahBayar;
+    int biayaAdmin = 2500;
+
+    printf("\n===== Pembayaran Pulsa ======\n");
+    printf("Masukkan Nomor Telepon (Format: 08XXXXXXXXXX): ");
+    fgets(nomorHP, sizeof(nomorHP), stdin);
+    nomorHP[strcspn(nomorHP, "\n")] = 0;
+    fflush(stdin);
+
+    if(strncmp(nomorHP, "08", 2) != 0)
+    {
+        printf("Nomor Telepon Tidak Valid! Nomor Harus Diawali '08' dan Maksimal 13 Digit.\n");
+        return;
+    }
+
+    printf("Masukkan Nominal Pulsa yang Akan Dibeli: Rp.%d", &jumlahBayar);
+    int totalBayar = jumlahBayar + biayaAdmin;
+
+    if(saldo.saldo >= totalBayar)
+    {
+        saldo.saldo -= totalBayar;
+        kondisibaru->saldo = saldo.saldo;
+        printf("\nPembayaran Berhasil.\n");
+        printf("Jenis Tagihan       : Pajak\n");
+        printf("Nomor Telepon       : %s\n", nomorHP);
+        printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar);
+        printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
+        printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
+        info.transaksi = totalBayar;
+        strcpy(info.ket, "Pulsa");
+    }
+    else
+    {
+        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
+        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalBayar);
+        printf("Saldo Anda Saat Ini     : Rp.%d\n", saldo.saldo);
+    }
+
+}
+
+void pembayaranTagihan(akun saldo, datket out, akun * kondisibaru)
+{
+    retry:
+    sloadkartu(saldo.nokartu, &saldo);
+    akun temp;
+    *kondisibaru = temp;
+    int pilihan;
+    char nomorPDAM[25];
+    char nomorPLN[25];
+    char nomorNPWP[25];
+    char nomorHP[25];
+    int jumlahBayar;
+    int biayaAdmin = 2500;
+    
+    printf("\n=====  Pilih Jenis Tagihan/Pembayaran =====\n");
+    printf("1. PDAM\n");
+    printf("2. PLN\n");
+    printf("3. Pajak\n");
+    printf("4. Pulsa\n");
+    printf("Masukkan Pilihan Anda: \n");
+    scanf("%d",&pilihan);
+    fflush(stdin);
+    
+    if(pilihan == 1){
+        pembayaranPDAM(saldo, out, &temp);
+    }
+    else if (pilihan == 2){
+        pembayaranPLN(saldo, out, &temp);
+    }
+    else if (pilihan == 3){
+        pembayaranPajak(saldo, out, &temp);
+    }
+    else if (pilihan == 4){
+        pembayaranPulsa(saldo, out, &temp);
+    }
+    else
+    {
+        printf("input invalid\n");
+        goto retry;
+    }
+}    
+
+void setorTunai(akun saldo, datket info, akun * kondisibaru)
+{
+    int nominalSetor;
+
+    printf("\nMasukkan Jumlah Uang yang Akan Disetor (Kelipatan Rp.50.000): ");
+    retry:
+    scanf("%d", &nominalSetor);
+    fflush(stdin);
+    if(nominalSetor %50000 != 0)
+    {
+        printf("Jumlah Uang yang Dimasukkan Harus Kelipatan Rp.50.000 !\n");
+        goto retry;
+    }
+
+    saldo.saldo += nominalSetor;
+    kondisibaru->saldo = saldo.saldo;
+    printf("Setoran Sebesar Rp.%d Berhasil. Saldo Anda Sekarang adalah: Rp.%d\n", nominalSetor, saldo.saldo);
+    info.transaksi = nominalSetor;
+    strcpy(info.ket, "Setor Tunai");
+}
+
+void newPW(akun edit)
+{
+    char pinbaru[7], pinbaru2[7];
+    lagi:
+    printf("Masukan sandi Baru:\n");
+    fgets(pinbaru, sizeof(pinbaru), stdin);
+    pinbaru[strcspn(pinbaru, "\n")] = 0;
+    fflush(stdin);
+    printf("Konfirmasi sandi Baru, Ketikan Sandi baru anda kembali:\n");
+    fgets(pinbaru2, sizeof(pinbaru2), stdin);
+    pinbaru2[strcspn(pinbaru2, "\n")] = 0;
+    fflush(stdin);
+    int res2 = strcmp(pinbaru, pinbaru2);
+    if(res2 == 0){
+        strcpy(edit.pin, pinbaru);
+        ssavekartu(edit.nokartu, edit);
+    }
+    else
+    {
+        goto lagi;
+    }
+}
+
+void changePW(akun edit){
+    char pinlama[7];
+    int i = 1;
+    while(i<3){
+        printf("Ubah Pin\n");
+        printf("Masukan Pin lama anda  :\n");
+        fgets(pinlama, sizeof(pinlama), stdin);
+        pinlama[strcspn(pinlama, "\n")] = 0;
+        fflush(stdin);
+        int res = strcmp(pinlama, edit.pin);
+        if(res == 0){
+            printf("Sandi Benar \n");
+            i=i+4;
+        }
+        else{
+            printf("Sandi Salah! Masukan Kembali sandi! \n");
+            i= i+1;
+        }
+        newPW(edit);
+    }
+}
+
+void changegmail(akun edit){
+    char emailbaru[50];
+    printf("Masukan email anda :\n");
+    fgets(emailbaru, sizeof(emailbaru), stdin);
+    emailbaru[strcspn(emailbaru, "\n")] = 0;
+    fflush(stdin);
+    strcpy(edit.gmail, emailbaru);
+    ssavekartu(edit.nokartu, edit);
+}
+
+void MenuPelayanan(akun in){
+    fflush(stdin);
+    char Opsi;
+    akun out;
+    retry:
+    printf("\n1. Ubah PIN\n2. Ubah email\n3. Blokir akun\n4. Buka Blokir akun\n");
+    printf("Masukan Pilihan :");
+    Opsi = fgetc(stdin);
+    fflush(stdin);
+    if(Opsi == '1'){
+        changePW(in);
+    }else if(Opsi == '2'){
+        changegmail(in);
+    }else if(Opsi == '3'){
+        blokirakun(in.nokartu);
+    }else if(Opsi == '4')
+    {
+        bukablokirakun(in.nokartu);
+    }
+    else{
+        printf("Input tidak valid");
+        goto retry;
+    }
+}
+
+void informasi(akun read)
+{
+    printf("\n|=======================(Informasi Kartu)======================|");
+    printf("\nNomor kartu anda adalah %s", read.nokartu);
+	printf("\nNomor rekening anda adalah %s", read.norek);
+	printf("\nSaldo anda adalah %d", read.saldo);
+	printf("\nNama anda dalam kartu adalah %s", read.nama);
+	printf("\nPin anda %s", read.pin);
+	printf("\nTipe kartu anda adalah %d", read.tipekartu);
+	printf("\nStatus kartu anda adalah %d", read.statuskartu);
+	printf("\nGmail kartu anda adalah %s", read.gmail);
+}
+
+void menu(akun loaded, datket out)
+{
+    sloadkartu(loaded.nokartu, &loaded);
+    if(loaded.statuskartu == 1)
+    {
+        retry:
+        sloadkartu(loaded.nokartu, &loaded);
+        int width = 80;
+        char str[] = "MENU";
+        char opsi;
+        akun temp = loaded;
+            
+        int length = sizeof(str) - 1;
+        int pad = (length >= width) ? 0 : (width - length) / 2;
+        
+
+        printf("%*.*s%s\n", pad, pad, " ", str);
+        printf("\n1. Cek Saldo\n");
+        printf("2. Tarik Tunai\n");
+        printf("3. Setor Tunai\n");
+        printf("4. Transfer\n");
+        printf("5. Pembayaran\n");
+        printf("6. Virtual Account\n");
+        printf("7. Pelayanan\n");
+        printf("8. Mutasi rekening\n");
+        printf("9. Informasi Akun\n");
+        printf("0. Keluar\n");
+        printf("Masukan Pilihanmu :");
+        opsi = fgetc(stdin);
+        fflush(stdin);
+        if(opsi == '1'){
+            cekSaldo(loaded.saldo);
+        }
+        else if(opsi == '2')
+        {
+            tarikTunai(loaded, out, &temp);
+            ssavekartu(loaded.nokartu, temp);
+        }
+        else if(opsi == '3')
+        {
+            setorTunai(loaded, out, &temp);
+            ssavekartu(loaded.nokartu, temp);
+        }
+        else if(opsi == '4')
+        {
+            OpsiBank(loaded, out, &temp);
+        }
+        else if(opsi == '5')
+        {
+            pembayaranTagihan(loaded, out, &temp);
+        }
+        else if(opsi == '6')
+        {
+            VA(loaded, out, &temp);
+            ssavekartu(loaded.nokartu, temp);
+        }
+        else if(opsi == '7' )
+        {
+            MenuPelayanan(loaded);
+        }
+        else if (opsi == '8')
+        {
+            opsimutasi();
+        }
+        else if (opsi == '9')
+        {
+            informasi(loaded);
+        }
+        else if (opsi == '0')
+        {
+            exit(1);
+        }
+        else
+        {
+            printf("Input tidak valid");
+            Sleep(1500);
+            system("cls");
+            goto retry;
+        }
+    }
+    else
+    {
+        printf("KARTU ANDA TELAH TERBLOKIR!\n");
+        Sleep(3000);
+        exit(1);
+    }
+}
 
 void generatornokartu(char nokartu[17])
 {
@@ -360,6 +835,15 @@ void buatakun(akun * new)
     generatornokartu(new->nokartu);
     generatornorek(new->norek);
 	
+	printf("\nNomor kartu anda adalah %s", new->nokartu);
+	printf("\nNomor rekening anda adalah %s", new->norek);
+	printf("\nSaldo anda adalah %d", new->saldo);
+	printf("\nNama anda dalam kartu adalah %s", new->nama);
+	printf("\nPin anda %s", new->pin);
+	printf("\nTipe kartu anda adalah %d", new->tipekartu);
+	printf("\nStatus kartu anda adalah %d", new->statuskartu);
+	printf("\nGmail kartu anda adalah %s", new->gmail);
+
 }
 
 void gettipe(int tipekartu, char cektipe[9])
@@ -388,7 +872,7 @@ void login(akun* diload)
     int i = 1;
     
     isikartu:
-    printf("Masukan Nomor Kartu..... (16 digit)\n");
+    printf("\nMasukan Nomor Kartu..... (16 digit)\n");
     fgets(nokartuisi, sizeof(nokartuisi), stdin);
     nokartuisi[strcspn(nokartuisi, "\n")] = 0;
     fflush(stdin);
@@ -397,7 +881,7 @@ void login(akun* diload)
     {
 		if(temp.statuskartu == 0)
 		{
-			printf("Kartu anda diblokir, harap kunjungi KCP terdekat\n Untuk membuka blokir!");
+			printf("Kartu anda diblokir, harap kunjungi KCP terdekat\nUntuk membuka blokir!");
 			exit(1);
 		}
 		printf("Masukan Pin..... (6 digit)\n");   
@@ -408,10 +892,9 @@ void login(akun* diload)
                 fflush(stdin);
                 if(strcmp(pininput, temp.pin) == 0)
                 {
-                    printf("Pin Benar");
+                    printf("\nPin Benar");
 					*diload = temp;
-					printf("Selamat Datang!");
-                    menu();
+                    goto done;
                 } else
                 printf("Pin Salah!, Masukan Pin kembali!\n");
                 ++i;
@@ -422,110 +905,57 @@ void login(akun* diload)
     {
         goto isikartu;
     }
+    done:
 }
 
-int Opsibhs ()
-{
 
-    char bhs[1];
-    printf("Pilih Bahasa\n 1. Inggris\n 2. Indonesia");
-    printf("Masukan Pilihan :");
-    scanf("%s", bhs);
-
-}
- 
-void tarikTunai(int *saldo, int* pengeluaran, int* keterangan)
+void masukKartuATM()
 {
-    int uangDitarik;
-    printf("Masukkan Jumlah Uang yang Ingin Ditarik (Kelipatan Rp.50.000): ");
-    scanf("%d", &uangDitarik);
-    
-    if(uangDitarik % 50000 != 0)
+	char masukKartu;
+    akun regis;
+	printf("SELAMAT DATANG DI ATM BANK BAWA CUAN AMAN\n\n");
+	printf("SILAHKAN MASUKKAN KARTU ANDA...\n");
+	
+	masukKartu:	
+	printf("TEKAN 'ENTER' UNTUK MEMASUKKAN KARTU\nTEKAN 'N' UNTUK REGISTRASI\nUNTUK BANTUAN TEKAN 'Y'\nUNTUK KELUAR TEKAN 'X'\nOpsi: ");
+
+	masukKartu = fgetc(stdin);
+    fflush(stdin);
+
+	if (masukKartu == '\n') 
+	{
+		printf("KARTU BERHASIL DIMASUKKAN. SELAMAT DATANG DI LAYANAN ATM BCA\n");
+	} 
+    else if (masukKartu == 'n' || masukKartu == 'N')
     {
-        printf("Uang yang dimasukan tidak valid\n");
+        buatakun(&regis);
+        saveakun(regis);
+        exit(1);
     }
-}
-
-void cekSaldo(int saldo)
-{
-    printf("Saldo Anda Saat Ini Adalah: Rp.%d", saldo);
-}
-
-char OpsiBank();
-    int Opsibank;
-    printf("1. Transfer sesama Bank \n 2. Transfer Beda Bank \n");
-    printf("Masukkan Pilihan:");
-    scanf("%s", Opsibank);
-    if(Opsibank == 1){
-        transferBCA();
-    }else if (Opsibank == 2){
-        transferother();
-    }else{
-    printf("Input Invalid");
+    else if (masukKartu == 'y' || masukKartu == 'Y')
+    {
+        char helpkartu[17];
+        akun help;
+        printf("Masukan nomor kartu anda!\n");
+        fgets(helpkartu, sizeof(helpkartu), stdin);
+        helpkartu[strcspn(helpkartu, "\n")] = 0;
+        fflush(stdin);
+        sloadkartu(helpkartu, &help);
+        MenuPelayanan(help);
     }
-
-
-void transferBCA(int *saldo, int* pengeluaran, int* keterangan)
-{
-
-    char norektujuan[20];
-    int jumlahTransfer;
-    printf("Masukkan Nomor Rekening Tujuan: ");
-    scanf("%s",norektujuan);
-
-    printf("Masukkan Jumlah yang Akan Ditransfer: Rp.");
-    scanf("%d",&jumlahTransfer);
-    
-    if(*saldo >= jumlahTransfer)
+    else if (masukKartu == 'X' || masukKartu == 'x')
     {
-        *saldo -= jumlahTransfer;
-        printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
-        printf("Sisa Saldo Anda Adalah: Rp.%d\n", *saldo);
-    } 
-    else
-    {
-        printf("Transfer Gagal. Saldo Anda Tidak Mencukupi");
+        exit(1);
     }
-}
-
-void transferother(int *saldo, int* pengeluaran, int* keterangan)
-{
-
-    char norektujuan[20];
-    int jumlahTransfer;
-    printf("Masukkan Nomor Rekening Tujuan: ");
-    scanf("%s",norektujuan);
-
-    printf("Masukkan Jumlah yang Akan Ditransfer: Rp.");
-    scanf("%d",&jumlahTransfer);
-    
-    if(*saldo >= jumlahTransfer)
-    {
-        jumlahTransfer = Jumlah transfer + 2500
-        *saldo -= jumlahTransfer;
-        printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
-        printf("Sisa Saldo Anda Adalah: Rp.%d\n", *saldo);
-    } 
-    else
-    {
-            printf("Transfer Gagal. Saldo Anda Tidak Mencukupi");
-    }
-}
-
-void setorTunai(int *saldo, int* pemasukan, int* keterangan)
-{
-    int nominalSetor;
-
-    printf("\nMasukkan Jumlah Uang yang Akan Disetor (Kelipatan Rp.50.000): ");
-    scanf("%d",&nominalSetor);
-
-    if(nominalSetor %50000 != 0)
-    {
-        printf("Jumlah Uang yang Dimasukkan Harus Kelipatan Rp.50.000 !\n");
-    }
-
-    *saldo += nominalSetor;
-    printf("Setoran Sebesar Rp.%d Berhasil. Saldo Anda Sekarang adalah: Rp.%d\n", nominalSetor, *saldo);
+	else 
+	{
+		printf("ANDA BELUM MEMASUKKAN KARTU. SILAHKAN COBA LAGI.\n");
+		
+		while (getchar() != '\n');
+		
+		goto masukKartu;
+	}
+	
 }
 
 int Biayaadmin(int saldo, int tipekartu){
@@ -539,280 +969,8 @@ int Biayaadmin(int saldo, int tipekartu){
     {
         saldo = saldo - 50000;
     }
-    printf("Saldo :", Saldo);
+    printf("Saldo :%d", saldo);
     return saldo;
 }
 
-voi newPW()
-{
-    printf("Masukan sandi Baru:");
-    scanf("%s", pinbaru);
-    printf("Konfirmasi sandi Baru:");
-    scanf("%s", pinbaru2);
-    int res2 = strcmp(pinbaru, pinbaru2);
-    if(res2 == 0){
-        strcpy(newpin, pinbaru);
-    }
-    else
-    {
-        newPW();
-    }
-}
-
-void changePW(char pin[7]){
-    char pinlama[7];
-    char pinbaru[7];
-    char pinbaru2[7];
-    int i = 1;
-    While(i<3){
-        printf("Ubah Pin\n");
-        printf("Masukan Pin anda  :\n");
-        scanf("%s", pinlama);
-        int res = strcmp(pinlama, pin);
-        if(res == 0){
-            printf("Sandi Benar \n");
-            i=i+4;
-        }else(){
-            printf("Sandi Salah! Masukan Kembali sandi! \n");
-            i= i+1;
-        }
-        newPW();
-    }
-}
-
-void pembayaranPDAM(int *saldo, int* pengeluaran, int* keterangan)
-{
-    char nomorPDAM[25];
-    int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 250000};
-    int biayaAdmin = 2500;
-    srand(time(NULL));
-    int angka_acak = (rand() % 10);
-    printf("\n===== Pembayaran PDAM =====\n");
-    printf("Masukkan Nomor ID Pelanggan PDAM (Format: PDAMXXXXX):");
-    scanf("%s", nomorPDAM);
-
-    if(strncmp(nomorPDAM, "PDAM", 4) != 0)
-    {
-        printf("Nomor ID Pelanggan Tidak Valid ! Nomor Harus Diawali 'PDAM'\n");
-        return;
-    }
-
-    printf("Jumlah Tagihan yang Akan Dibayar: Rp. %d", jumlahBayar[angka_acak]);
-    int totalBayar = jumlahBayar + biayaAdmin;
-
-    if (*saldo >= totalBayar)
-    {
-        *saldo -= totalBayar;
-        printf("\nPembayaran Berhasil.\n");
-        printf("Jenis Tagihan       : PDAM\n");
-        printf("Nomor Tujuan        : %s\n", nomorPDAM);
-        printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar);
-        printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
-        printf("Sisa Saldo Anda     : Rp.%d\n", *saldo);
-    }
-    else
-    {
-        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
-        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalbayar);
-        printf("Saldo Anda Saat Ini     : Rp.%d\n", *saldo);
-    }
-}
-
-void pembayaranPLN(int *saldo, int* pengeluaran, int* keterangan)
-{
-    char nomorPLN[25];
-    int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 25000};
-    int biayaAdmin = 2500;
-
-    srand(time(NULL));
-    int angka_acak = (rand() % 10);
-    printf("\n===== Pembayaran PLM =====\n");
-    printf("Masukkan Nomor ID Pelanggan PLN (Format: PLNXXXXX):");
-    scanf("%s", nomorPLN);
-
-    if(strncmp(nomorPLN, "PLN", 3) != 0)
-    {
-        printf("Nomor ID Pelanggan Tidak Valid ! Nomor Harus Diawali 'PLN'\n");
-        return;
-    }
-
-    printf("Masukkan Jumlah Tagihan yang Akan Dibayar: Rp.");
-    printf("Nominal yang dibayar : %d", jumlahBayar[angka_acak]);
-    
-    int totalBayar = jumlahBayar[angka_acak] + biayaAdmin;
-
-    if (*saldo >= totalBayar)
-    {
-        *saldo -= totalBayar;
-        printf("\nPembayaran Berhasil.\n");
-        printf("Jenis Tagihan       : PLN\n");
-        printf("Nomor Tujuan        : %s\n", nomorPLN);
-        printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar[angka_acak]);
-        printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
-        printf("Total Bayar         : Rp. %d\n", totalBayar);
-        printf("Sisa Saldo Anda     : Rp.%d\n", *saldo);
-    }
-    else
-    {
-        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
-        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalbayar);
-        printf("Saldo Anda Saat Ini     : Rp.%d\n", *saldo);
-    }
-}
-
-void pembayaranPajak(int *saldo, int* pengeluaran, int* keterangan)
-{
-    char nomorNPWP[25];
-    int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 25000};
-    int biayaAdmin = 2500;
-
-    srand(time(NULL);)
-    int angka_acak= (rand() % 10);
-    printf("\n===== Pembayaran Pajak =====\n");
-    printf("Masukkan Nomor Objek Pajak: ");
-    scanf("%s", nomorNPWP);
-
-    printf("Masukkan Jumlah Tagihan yang Akan Dibayar: Rp. %d", jumlahBayar[angka_acak]);
-    
-    int totalBayar = jumlahBayar[angka_acak] + biayaAdmin;
-
-    if (*saldo >= totalBayar)
-    {
-        *saldo -= totalBayar;
-        printf("\nPembayaran Berhasil.\n");
-        printf("Jenis Tagihan       : Pajak\n");
-        printf("Nomor Tujuan        : %s\n", nomorNPWP);
-        printf("Jumlah Tagihan      : Rp. %d\n", jumlahbayar[angka_acak]);
-        printf("Biaya Administrasi  : Rp. %d\n", biayaAdmin);
-        printf("Total Bayar         : Rp. %d\n", totalBayar);
-        printf("Sisa Saldo Anda     : Rp.%d\n", *saldo);
-    }
-    else
-    {
-        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
-        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalbayar);
-        printf("Saldo Anda Saat Ini     : Rp.%d\n", *saldo);
-    }
-}
-
-void pembayaranPulsa(int *saldo, int* pengeluaran, int* keterangan)
-{
-    char nomorHP[13];
-    int jumlahBayar;
-    int biaAdmin = 2500;
-
-    printf("\n===== Pembayaran Pulsa ======\n");
-    printf("Masukkan Nomor Telepon (Format: 08XXXXXXXXXX): ");
-    scanf("%s", nomorHP);
-
-    if(strncmp(nomorHP, "08", 2) != 0)
-    {
-        printf("Nomor Telepon Tidak Valid! Nomor Harus Diawali '08' dan Maksimal 13 Digit.\n");
-        return;
-    }
-
-    printf("Masukkan Nominal Pulsa yang Akan Dibeli: Rp.%d", &jumlahBayar);
-    int totalBayar = jumlahBayar + biayaAdmin;
-
-    if(*saldo >= totalBayar)
-    {
-        *saldo -= totalBayar;
-        printf("\nPembayaran Berhasil.\n");
-        printf("Jenis Tagihan       : Pajak\n");
-        printf("Nomor Telepon       : %s\n", nomorHp);
-        printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar);
-        printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
-        printf("Sisa Saldo Anda     : Rp.%d\n", *saldo);
-    }
-    else
-    {
-        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
-        printf("Jumlah yang Dibutuhkan  : Rp.%d\n", totalbayar);
-        printf("Saldo Anda Saat Ini     : Rp.%d\n", *saldo);
-    }
-*keterangan = 8;
-}
-
-void pembayaranTagihan(int *saldo, int* pengeluaran,int* keterangan)
-{
-    int pilihan;
-    char nomorPDAM[25];
-    char nomorPLN[25];
-    char nomorNPWP[25];
-    char nomorHP[25];
-    int jumlahBayar;
-    int biayaAdmin = 2500;
-    
-    pulsa :
-    printf("\n=====  Pilih Jenis Tagihan/Pembayaran =====\n");
-    printf("1. PDAM\n");
-    printf("2. PLN\n");
-    printf("3. Pajak\n");
-    printf("4. Pulsa\n");
-    printf("Masukkan Pilihan Anda: \n");
-    scanf("%d",&pilihan);
-    
-    if(pilihan == 1){
-        pembayaranPDAM(saldo);
-    }else if (pilihan == 2){
-        pembayaranPLN(saldo);
-    }else if (pilihan == 3){
-        pembayaranPajak(saldo);
-    }else if (pilihan == 4){
-        pembayaranPulsa(saldo);
-    }else(){
-        printf("input invalid\n");
-        goto pulsa;
-    }
-}    
-
-void cetakStruk(datastruk struk, int jumlahTransaksi, void getsaatini)
-{
-    printf("                         BCA                            ");
-    printf("                    Bank Cuan Aman                      ");
-    printf("--------------------------------------------------------");
-    printf("%d", *hari);
-
-    
-}
-
-int VA(int* saldo, int* pengeluaran, int* keterangan)
-{
-    char VirtualAccount[20];
-    int Nominaldibayar;
-    VirtualA:
-    printf("Masukan No. Virtual Account \n");
-    scanf("%s", VirtualAccount);
-    printf("Masukkan Jumlah Nominal :");
-    scanf("%s", Nominaldibayar);
-    if(Nominaldibayar > *saldo){
-        printf("\nPembayaran Gagal. Saldo Anda Tidak Mencukupi.\n");
-        printf("Nominal yang dibayarkan     : Rp.%d\n", Nominaldibayar);
-        printf("Saldo Anda Saat Ini         : Rp.%d\n", *saldo);
-        goto VirtualA;
-    }else(){
-        printf("Transaksi berhasiil");
-        *saldo = *saldo - Nominaldibayar;
-    }
-}
-
-char NextorNot(){
-    char Opsi[1];
-
-    jadiganih :
-    printf("Apakah anda ingin melanjutkan transaksi :\n");
-    printf("1. Ya\n");
-    printf("2. No");
-    scanf("%c", &Opsi);
-    if(Opsi == 1){
-        menu();
-    }else if (Opsi == 2)
-    {
-        cetakStruk(datastruk struk, int jumlahTransaksi);
-        exit(1);   
-    }else(){
-        goto jadiganih;
-    }
-
-}
 #endif

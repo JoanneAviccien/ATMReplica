@@ -21,12 +21,6 @@ typedef struct
 
 typedef struct
 {
-    char norektujuan[10];
-    char namatujuan[25];
-} datastruk;
-
-typedef struct
-{
     int transaksi;
     char ket[19];
 } datket;
@@ -45,21 +39,27 @@ typedef struct
     waktu timemutasi;
 } mutasi;
 
+void Logo();
+
 void saveakun(akun write);
 
 void sloadkartu(char carikartu[17], akun * foundacc);
 
-void getsaatini(int* hari,int* bulan, int* tahun);
+void ssavekartu(char carikartu[17], akun insertacc);
 
-void getketerangan(int ket, char outket[19]);
+void blokirakun(char kartu[17]);
+
+void bukablokirakun(char kartu[17]);
+
+void monthlymutasi();
+
+void yearlymutasi();
+
+void getsaatini(int*hari, int* bulan, int* tahun);
 
 void opsimutasi();
 
-void masukKartuATM();
-
-int menu();
-
-void MenuPelayanan();
+void menu(akun loaded, datket out);
 
 void generatornokartu(char nokartu[17]);
 
@@ -69,43 +69,46 @@ void buatakun(akun * new);
 
 void gettipe(int tipekartu, char cektipe[9]);
 
-void blokirkartu(akun* kartu);
+void login(akun* diload);
 
-void login(char *nokartu, char *pin);
+void masukKartuATM();
 
-int Opsibhs ();
- 
-void tarikTunai(int *saldo, int* pengeluaran, int* keterangan);
+int VA(int* saldo, datket info);
+
+void tarikTunai(akun saldo, datket info, akun * kondisibaru);
 
 void cekSaldo(int saldo);
 
 char OpsiBank();
 
-void transferBCA(int *saldo, int* pengeluaran, int* keterangan);
+void transferBCA(akun saldo, datket info, akun * kondisibaru);
 
-void transferother(int *saldo, int* pengeluaran, int* keterangan);
+void transferother(akun saldo, datket info, akun * kondisibaru);
 
-void setorTunai(int *saldo, int* pemasukan, int* keterangan);
+void setorTunai(akun saldo, datket info, akun * kondisibaru);
 
 int Biayaadmin(int saldo, int tipekartu);
 
-char newPW();
+void newPW();
 
-char changePW(char pin[7]);
+void changePW(char pin[7]);
 
-void pembayaranPDAM(int *saldo, int* pengeluaran, int* keterangan);
+void changegmail(char kriteriaemail[50],char emailbaru[50]);
 
-void pembayaranPLN(int *saldo, int* pengeluaran, int* keterangan);
+void MenuPelayanan();
 
-void pembayaranPajak(int *saldo, int* pengeluaran, int* keterangan);
+void pembayaranPDAM(akun saldo, datket info, akun * kondisibaru);
 
-void pembayaranPulsa(int *saldo, int* pengeluaran, int* keterangan);
+void pembayaranPLN(akun saldo, datket info, akun * kondisibaru);
 
-void pembayaranTagihan(int *saldo, int* pengeluaran,int* keterangan);
+void pembayaranPajak(akun saldo, datket info, akun * kondisibaru);
 
-void cetakStruk(datastruk struk, int jumlahTransaksi);
+void pembayaranPulsa(akun saldo, datket info, akun * kondisibaru);
 
-void VA(int* saldo, int* pengeluaran, int* keterangan);
+void pembayaranTagihan(akun saldo, datket info, akun * kondisibaru);
 
-char NextorNot();
+void pembayaranTagihan(akun saldo, datket info, akun * kondisibaru);
+
+void informasi(akun read);
+
 #endif

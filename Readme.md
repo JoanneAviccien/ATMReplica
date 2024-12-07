@@ -7,27 +7,17 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 <details>
     <summary>List Fitur Program (Penambahan)</summary>
     <ul>
-        <li>Fitur login (maksimal kesalahan input password 3x)</li>
+        <li>Fitur login (maksimal kesalahan input password 3x) (Auto blokir kartu)</li>
         <li>Fitur lihat informasi saldo</li>
-        <li>Fitur Transfer Uang (Limit transfer perhari tergantung dari jenis rekening)Setiap jenis rekening memiliki limit harian yang berbeda.Misalnya:</li>
-        <li>Rekening Silver: Transfer maksimal Rp10 juta/hari, tarik tunai maksimal Rp5 juta/hari.</li>
-        <li>Rekening Gold: Transfer maksimal Rp20 juta/hari, tarik tunai maksimal Rp10 juta/hari.</li>
-        <li>Rekening Platinum: Transfer maksimal Rp50 juta/hari, tarik tunai maksimal Rp20 juta/hari.</li>
-        <li>Fitur Daftar mutasi per periode (mingguan/bulanan/per periode tertentu)</li>
-        <li>Fitur Tarik Tunai (dengan nominal sesuai menu ATM atau input tergantung pengguna)</li>
-        <li>Fitur Pelayanan (Ubah pin, ubah alamat e-mail, enable/disable kartu atm)</li>
+        <li>Rekening tipe 1: Transfer maksimal Rp10 juta/hari</li>
+        <li>Rekening tipe 2: Transfer maksimal Rp20 juta/hari</li>
+        <li>Rekening tipe 3: Transfer maksimal Rp50 juta/hari</li>
+        <li>Fitur Tarik Tunai</li>
         <li>Fitur Pembayaran (bayar listrik, pdam, top up, pajak)</li>
         <li>Fitur Pembuatan rekening</li>
-        <li>Fitur Hapus Otomatis rekening (setelah di disable 30-hari)</li>
-        <li>Fitur Ganti Bahasa Indonesia atau Inggris</li>
-        <li>Fitur Pemilihan Nominal Pecahan saat Penarikan Uang Rp.50.000 atau Rp.100.000</li>
         <li>Fitur Biaya Transfer ke bank lain: Rp5.000 per transaksi.</li>
-        <li>Fitur Schedule Transfer Sesuai waktu yang ditentukan.</li>
         <li>Fitur Melakukan Setor Tunai</li>
-        <li>Fitur Logout Otomatis jika 30 detik tidak melakukan apapun</li>
         <li>Fitur Mencetak Kartu, dengan syarat sudah memiliki rekening</li>
-        <li>Fitur menentukan penarikan nominal pecahan secara kombinasi</li>
-        <li>Fitur Struk setelah selesai</li>
     </ul>
 
 </details>
@@ -40,6 +30,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [x] Fitur Penarikan Tunai
 - [x] Fitur Pembayaran
 - [ ] Fitur daftar mutasi per periode
+- [ ] Limit Transfer
 - [x] Fitur Pelayanan
 - [x] Fitur login
 

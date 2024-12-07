@@ -320,7 +320,7 @@ void transferother(akun saldo, datket info, akun * kondisibaru)
     
     if(saldo.saldo >= jumlahTransfer)
     {
-        jumlahTransfer = jumlahTransfer + 2500;
+        jumlahTransfer = jumlahTransfer + 5000;
         *kondisibaru = saldo;
         saldo.saldo -= jumlahTransfer;
         kondisibaru->saldo = saldo.saldo;
@@ -843,24 +843,6 @@ void buatakun(akun * new)
 	printf("\nTipe kartu anda adalah %d", new->tipekartu);
 	printf("\nStatus kartu anda adalah %d", new->statuskartu);
 	printf("\nGmail kartu anda adalah %s", new->gmail);
-
-}
-
-void gettipe(int tipekartu, char cektipe[9])
-{
-    
-	if(tipekartu == 1)
-	{
-		strcpy(cektipe, "Silver");
-	}
-	else if (tipekartu == 2)
-	{
-		strcpy(cektipe, "Gold");
-	}
-	else if (tipekartu == 3)
-	{
-		strcpy(cektipe, "Platinum");
-	}
 
 }
 

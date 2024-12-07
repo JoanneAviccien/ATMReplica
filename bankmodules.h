@@ -67,8 +67,6 @@ void generatornorek(char norek[11]);
 
 void buatakun(akun * new);
 
-void gettipe(int tipekartu, char cektipe[9]);
-
 void login(akun* diload);
 
 void masukKartuATM();

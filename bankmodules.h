@@ -27,13 +27,29 @@ typedef struct
 
 typedef struct
 {
+    int transaksi;
+    char ket[19];
+} datket;
+
+typedef struct
+{
+    int tgl;
+    int bln;
+    int thn;
+} waktu;
+
+typedef struct
+{
     char nokartu[17];
-    int keluar;
-    int masuk;
-    int keterangan;
+    datket datatf;
+    waktu timemutasi;
 } mutasi;
 
-void getsaatini(int* bulan, int* tahun);
+void saveakun(akun write);
+
+void sloadkartu(char carikartu[17], akun * foundacc);
+
+void getsaatini(int* hari,int* bulan, int* tahun);
 
 void getketerangan(int ket, char outket[19]);
 
@@ -50,8 +66,6 @@ void generatornokartu(char nokartu[17]);
 void generatornorek(char norek[11]);
 
 void buatakun(akun * new);
-
-void getstatus(int statuskartu, char cekstatus[10]);
 
 void gettipe(int tipekartu, char cektipe[9]);
 

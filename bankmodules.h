@@ -47,16 +47,6 @@ void Logo();
 
 void saveakun(akun write);
 
-void savelimit(limit in);
-
-void sloadlimit(char carikartu[17], limit * output);
-
-void ssavelimit(char carikartu[17], limit input);
-
-void resetlimit(limit in, waktu hariini);
-
-int ceklimit(akun in, limit inlim);
-
 void sloadkartu(char carikartu[17], akun * foundacc);
 
 void ssavekartu(char carikartu[17], akun insertacc);
@@ -65,9 +55,25 @@ void blokirakun(char kartu[17]);
 
 void bukablokirakun(char kartu[17]);
 
+void printtahun(mutasi display);
+
+void printbulan(mutasi display);
+
 void newmonthlymutasi(mutasi inm);
 
 void newyearlymutasi(mutasi iny);
+
+void sloadperbulan(char carikartu[17], mutasi* outm);
+
+void sloadpertahun(char carikartu[17], mutasi* outy);
+
+void ssavepertahunmasuk(char carikartu[17], mutasi iny);
+
+void ssaveperbulanmasuk(char carikartu[17], mutasi inm);
+
+void ssavepertahunkeluar(char carikartu[17], mutasi iny);
+
+void ssaveperbulankeluar(char carikartu[17], mutasi inm);
 
 void resettahun(char carikartu[17], mutasi in, waktu saatini);
 
@@ -75,15 +81,59 @@ void resetbulan(char carikartu[17], mutasi in, waktu saatini);
 
 void getsaatini(int*hari, int* bulan, int* tahun);
 
+void opsimutasi(mutasi mon, mutasi year);
+
+void tarikTunai(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monthly, mutasi* yearly);
+
+int VA(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout);
+
+void cekSaldo(int saldo);
+
+void savelimit(limit in);
+
+void sloadlimit(char carikartu[17], limit * output);
+
+void ssavelimit(char carikartu[17], limit input);
+
+void resetlimit(char carikartu[17], limit in, waktu hariini);
+
+int ceklimit(akun in, limit inlim);
+
+void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout);
+
+void transferother(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout);
+
+void OpsiBank(akun loaded, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monthly, mutasi* yearly);
+
+void pembayaranPDAM(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout);
+
+void pembayaranPLN(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin,mutasi* monout , mutasi* yearout);
+
+void pembayaranPajak(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin,mutasi* monout , mutasi* yearout);
+
+void pembayaranPulsa(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout);
+
+void pembayaranTagihan(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout);
+
+void setorTunai(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monthly, mutasi* yearly);
+
+void newPW(akun edit);
+
+void changePW(akun edit);
+
+void changegmail(akun edit);
+
+void MenuPelayanan(akun in);
+
+void informasi(akun read);
+
+void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly);
+
 void gettgl(int * tgl);
 
 void getbln(int * bln);
 
 void getthn(int * thn);
-
-void opsimutasi(mutasi mon, mutasi year);
-
-void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly);
 
 void generatornokartu(char nokartu[17]);
 
@@ -95,42 +145,6 @@ void login(akun* diload, limit* loadedlim, mutasi* monthly, mutasi* yearly);
 
 void masukKartuATM();
 
-int VA(int* saldo);
-
-void tarikTunai(akun saldo, akun * kondisibaru);
-
-void cekSaldo(int saldo);
-
-void OpsiBank(akun loaded, akun * kondisibaru, limit in, limit* outlim);
-
-void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim);
-
-void transferother(akun saldo, akun * kondisibaru, limit in, limit* outlim);
-
-void setorTunai(akun saldo, akun * kondisibaru);
-
 int Biayaadmin(int saldo, int tipekartu);
-
-void newPW();
-
-void changePW(char pin[7]);
-
-void changegmail(char kriteriaemail[50],char emailbaru[50]);
-
-void MenuPelayanan();
-
-void pembayaranPDAM(akun saldo, akun * kondisibaru);
-
-void pembayaranPLN(akun saldo, akun * kondisibaru);
-
-void pembayaranPajak(akun saldo, akun * kondisibaru);
-
-void pembayaranPulsa(akun saldo, akun * kondisibaru);
-
-void pembayaranTagihan(akun saldo, akun * kondisibaru);
-
-void pembayaranTagihan(akun saldo, akun * kondisibaru);
-
-void informasi(akun read);
 
 #endif

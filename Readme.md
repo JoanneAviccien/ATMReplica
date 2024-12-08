@@ -17,7 +17,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
         <li>Fitur Pembuatan rekening</li>
         <li>Fitur Biaya Transfer ke bank lain: Rp5.000 per transaksi.</li>
         <li>Fitur Melakukan Setor Tunai</li>
-        <li>Fitur Mencetak Kartu, dengan syarat sudah memiliki rekening</li>
+        <li>Fitur Mencetak Kartu/Generate Akun</li>
     </ul>
 
 </details>

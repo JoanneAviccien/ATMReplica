@@ -1187,8 +1187,6 @@ void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly)
         int length = sizeof(str) - 1;
         int pad = (length >= width) ? 0 : (width - length) / 2;
         
-
-        printf("Periode bulan %d, Periode tahun %d\n", monthly.periode, yearly.periode);
         printf("%*.*s%s\n", pad, pad, " ", str);
         printf("\n1. Cek Saldo\n");
         printf("2. Tarik Tunai\n");

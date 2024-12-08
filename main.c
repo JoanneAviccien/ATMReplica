@@ -8,8 +8,9 @@ int main()
 	//Kamus Data
 	waktu saatini;
 	akun loaded;
-	datket transaksi;
 	limit loadedlim;
+	mutasi monthly;
+	mutasi yearly;
 	char retry;
 
 
@@ -17,13 +18,13 @@ int main()
 	Logo();
 	getsaatini(&saatini.tgl, &saatini.bln, &saatini.thn);
 	masukKartuATM();
-	login(&loaded, &loadedlim);
+	login(&loaded, &loadedlim, &monthly, &yearly);
 
 	menu:
 	if(loaded.statuskartu == 1)
 	{
 		system("cls");
-		menu(loaded, transaksi, loadedlim);
+		menu(loaded, loadedlim, monthly, yearly);
 	} else
 	{
 		exit(1);

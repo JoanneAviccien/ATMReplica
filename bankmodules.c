@@ -25,12 +25,6 @@ typedef struct
 
 typedef struct
 {
-    int transaksi;
-    char ket[19];
-} datket;
-
-typedef struct
-{
     int tgl;
     int bln;
     int thn;
@@ -39,8 +33,9 @@ typedef struct
 typedef struct
 {
     char nokartu[17];
-    datket datatf;
-    waktu periode;
+    int keluar;
+    int masuk;
+    int periode;
 } mutasi;
 
 typedef struct
@@ -173,19 +168,198 @@ void bukablokirakun(char kartu[17])
 	fflush(blokir);
 }
 
-
-void monthlymutasi()
+void printtahun(mutasi display)
 {
-    system("cls");
-    FILE* perbulan = fopen("mutasiperbulan.bin","");
+    printf("[Mutasi Pertahun Untuk %s]\n\n", display.nokartu);
+    printf("Pengeluaran:    Rp.%d\n", display.keluar);
+    printf("Pemasukan:      Rp.%d\n", display.masuk);
+}
+
+void printbulan(mutasi display)
+{
+    printf("[Mutasi Perbulan Untuk %s]\n\n", display.nokartu);
+    printf("Pengeluaran:    Rp.%d\n", display.keluar);
+    printf("Pemasukan:      Rp.%d\n", display.masuk);
+}
+
+void newmonthlymutasi(mutasi inm)
+{
+    FILE* new = fopen("mutasiperbulan.bin","ab+");
+    if(new == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+    fwrite(&inm, sizeof(mutasi), 1, new);
+    fclose(new);
+}
+
+void newyearlymutasi(mutasi iny)
+{
+    FILE* new = fopen("mutasipertahun.bin","ab+");
+    if(new == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+    fwrite(&iny, sizeof(mutasi), 1, new);
+    fclose(new);
+}
+
+void sloadperbulan(char carikartu[17], mutasi* outm)
+{
+    mutasi temp;
+    FILE* perbulan = fopen("mutasiperbulan.bin","rb+");
+    if(perbulan == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+
+    while(!feof(perbulan))
+    {
+        fread(&temp, sizeof(akun), 1, perbulan);
+        if(strcmp(temp.nokartu, carikartu) == 0 )
+        {
+            *outm = temp;
+            break;
+        }
+    }      
+
+    fclose(perbulan);
 }
 
 
-
-void yearlymutasi()
+void sloadpertahun(char carikartu[17], mutasi* outy)
 {
-    system("cls");
-    FILE* pertahun = fopen("mutasipertaun.bin","");
+    mutasi temp;
+    FILE* pertahun = fopen("mutasipertahun.bin","rb+");
+    if(pertahun == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+
+    while(!feof(pertahun))
+    {
+        fread(&temp, sizeof(akun), 1, pertahun);
+        if(strcmp(temp.nokartu, carikartu) == 0 )
+        {
+            *outy = temp;
+            break;
+        }
+    }  
+
+    fclose(pertahun);
+}
+
+void ssavepertahun(char carikartu[17], mutasi iny)
+{
+    mutasi temp;
+    int countline = 0;
+    FILE* pertahun = fopen("mutasipertahun.bin","rb+");
+    if(pertahun == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+
+    while(strcmp(temp.nokartu, carikartu) != 0)
+    {
+        fread(&temp, sizeof(mutasi), 1, pertahun);
+		countline++;
+    }
+
+	fseek(pertahun, 0, SEEK_SET);
+	fseek(pertahun, (countline-1)*sizeof(mutasi), SEEK_SET);
+	fwrite(&iny, sizeof(mutasi), 1, pertahun);
+	fflush(pertahun);	
+
+    fclose(pertahun);
+}
+
+void ssaveperbulan(char carikartu[17], mutasi inm)
+{
+    mutasi temp;
+    int countline = 0;
+    FILE* perbulan = fopen("mutasiperbulan.bin","rb+");
+    if(perbulan == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+
+    while(strcmp(temp.nokartu, carikartu) != 0)
+    {
+        fread(&temp, sizeof(mutasi), 1, perbulan);
+		countline++;
+    }
+
+    fseek(perbulan, 0, SEEK_SET);
+	fseek(perbulan, (countline-1)*sizeof(mutasi), SEEK_SET);
+	fwrite(&inm, sizeof(mutasi), 1, perbulan);
+	fflush(perbulan);
+
+    fclose(perbulan);
+}
+
+void resettahun(char carikartu[17], mutasi in, waktu saatini)
+{
+    if (in.periode != saatini.thn)
+    {
+        mutasi out;
+        strcpy(out.nokartu, in.nokartu);
+        out.periode = saatini.thn;
+        out.keluar = 0;
+        out.masuk = 0;
+
+        mutasi temp;
+        int countline = 0;
+
+        FILE* reset = fopen("mutasipertahun.bin","rb+");
+        if(reset == NULL)
+        {
+            perror("Data tidak berhasil diakses!");
+        }
+        
+        while(strcmp(temp.nokartu, carikartu) != 0)
+        {
+            fread(&temp, sizeof(mutasi), 1, reset);
+            countline++;
+        }
+
+        fseek(reset, 0, SEEK_SET);
+        fseek(reset, (countline-1)*sizeof(mutasi), SEEK_SET);
+        fwrite(&out, sizeof(mutasi), 1, reset);
+        fflush(reset);
+        fclose(reset);	
+    }
+}
+
+void resetbulan(char carikartu[17], mutasi in, waktu saatini)
+{
+    if (in.periode != saatini.bln)
+    {
+        mutasi out;
+        strcpy(out.nokartu, in.nokartu);
+        out.periode = saatini.bln;
+        out.masuk = 0;
+        out.keluar = 0;
+
+        mutasi temp;
+        int countline = 0;
+
+        FILE* reset = fopen("mutasiperbulan.bin","rb+");
+        if(reset == NULL)
+        {
+            perror("Data tidak berhasil diakses!");
+        }
+        
+        while(strcmp(temp.nokartu, carikartu) != 0)
+        {
+            fread(&temp, sizeof(mutasi), 1, reset);
+            countline++;
+        }
+        fseek(reset, 0, SEEK_SET);
+        fseek(reset, (countline-1)*sizeof(mutasi), SEEK_SET);
+        fwrite(&out, sizeof(mutasi), 1, reset);
+        fflush(reset);
+        fclose(reset);	
+    }
 }
 
 void getsaatini(int*hari, int* bulan, int* tahun)
@@ -197,21 +371,39 @@ void getsaatini(int*hari, int* bulan, int* tahun)
 	*tahun = hariini.tm_year + 1900;
 }
 
-void opsimutasi()
+void opsimutasi(mutasi mon, mutasi year)
 {
+    retry:
     system("cls");
     char opsi;
-    printf("1. Pengeluaran\n");
-    printf("2. Pemasukan\n");
-    printf("3. Kembali\n");
-    printf("Masukkan pilihan :");
+    printf("-----------[Pilih Periode Mutasi]-----------\n");
+    printf("1. Perbulan\n");
+    printf("2. Pertahun\n");
+    printf("Masukkan pilihan: ");
     opsi = fgetc(stdin);
     fflush(stdin);
+
+    if(opsi == '1')
+    {
+        printbulan(mon);
+    }
+    else if (opsi == '2')
+    {
+        printtahun(year);
+    }
+    else
+    {
+        printf("Opsi invalid!");
+        Sleep(2500);
+        goto retry;
+    }
 }
 
-void tarikTunai(akun saldo, datket info, akun * kondisibaru)
+void tarikTunai(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monthly, mutasi* yearly)
 {
     int uangDitarik;
+    *monthly = monin;
+    *yearly = yearin;
     retry:
     printf("Masukkan Jumlah Uang yang Ingin Ditarik (Kelipatan Rp.50.000): ");
     scanf("%d", &uangDitarik);
@@ -225,9 +417,8 @@ void tarikTunai(akun saldo, datket info, akun * kondisibaru)
         else{
             saldo.saldo = saldo.saldo - uangDitarik;
             kondisibaru->saldo = saldo.saldo;
-
-            info.transaksi = uangDitarik;
-            strcpy(info.ket, "Tarik Tunai");
+            monthly->keluar = uangDitarik;
+            yearly->keluar = uangDitarik;
         }
     }else
     {
@@ -237,10 +428,12 @@ void tarikTunai(akun saldo, datket info, akun * kondisibaru)
     }
 }
 
-int VA(akun saldo, datket info, akun * kondisibaru)
+int VA(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
     char VirtualAccount[20];
     int Nominaldibayar;
+    *monout = monin;
+    *yearout = yearin;
     VirtualA:
     printf("Masukan No. Virtual Account \n");
     fgets(VirtualAccount, sizeof(VirtualAccount), stdin);
@@ -261,8 +454,8 @@ int VA(akun saldo, datket info, akun * kondisibaru)
         printf("Transaksi berhasil");
         saldo.saldo = saldo.saldo - Nominaldibayar;
         kondisibaru->saldo = saldo.saldo;
-        info.transaksi = Nominaldibayar;
-        strcpy(info.ket, "VA");
+        monout->keluar = Nominaldibayar;
+        yearout->keluar = Nominaldibayar;
     }
     
 }
@@ -404,7 +597,7 @@ int ceklimit(akun in, limit inlim)
     }
 }
 
-void transferBCA(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim)
+void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
     akun tujuan;
     char norektujuan[17];
@@ -426,13 +619,15 @@ void transferBCA(akun saldo, datket out, akun * kondisibaru, limit in, limit* ou
             saldo.saldo -= jumlahTransfer;
             *kondisibaru = saldo;
             *outlim = in;
+            *monout = monin;
+            *yearout = yearin;
             kondisibaru->saldo = saldo.saldo;
             tujuan.saldo += jumlahTransfer;
             outlim->tfhariini = jumlahTransfer;
+            monout->keluar = jumlahTransfer;
+            yearout->keluar = jumlahTransfer;
             printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
             printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
-            out.transaksi = jumlahTransfer;
-            strcpy(out.ket, "Transfer BCA");
             ssavekartu(tujuan.nokartu, tujuan);
         } 
         else
@@ -448,7 +643,7 @@ void transferBCA(akun saldo, datket out, akun * kondisibaru, limit in, limit* ou
     }
 }
 
-void transferother(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim)
+void transferother(akun saldo, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
 
     char norektujuan[20];
@@ -468,13 +663,15 @@ void transferother(akun saldo, datket out, akun * kondisibaru, limit in, limit* 
         jumlahTransfer = jumlahTransfer + 5000;
         *kondisibaru = saldo;
         *outlim = in;
+        *monout = monin;
+        *yearout = yearin;
         saldo.saldo -= jumlahTransfer;
         outlim->tfhariini = jumlahTransfer - 5000;
         kondisibaru->saldo = saldo.saldo;
+        monout->keluar = jumlahTransfer;
+        yearout->keluar = jumlahTransfer;
         printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer-(5000), norektujuan);
         printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
-        out.transaksi = jumlahTransfer;
-        strcpy(out.ket, "Transfer Bank lain");
     } 
     else
     {
@@ -482,14 +679,18 @@ void transferother(akun saldo, datket out, akun * kondisibaru, limit in, limit* 
     }
 }
 
-void OpsiBank(akun loaded, datket out, akun * kondisibaru, limit in, limit* outlim)
+void OpsiBank(akun loaded, akun * kondisibaru, limit in, limit* outlim, mutasi monin, mutasi yearin, mutasi* monthly, mutasi* yearly)
 {
     retry:
     sloadkartu(loaded.nokartu, &loaded);
     akun temp;
     limit templim;
+    mutasi tempmon;
+    mutasi tempyear;
     *kondisibaru = temp;
     *outlim = templim;
+    *monthly = tempmon;
+    *yearly = tempyear;
     
     char Opsibank;
     printf("1. Transfer sesama Bank \n2. Transfer Beda Bank \n");
@@ -498,15 +699,19 @@ void OpsiBank(akun loaded, datket out, akun * kondisibaru, limit in, limit* outl
     fflush(stdin);
     if(Opsibank == '1')
     {
-        transferBCA(loaded, out, &temp, in, &templim);
+        transferBCA(loaded, &temp, in, &templim, monin, yearin, &tempmon, &tempyear);
         ssavekartu(loaded.nokartu, temp);
         ssavelimit(loaded.nokartu, templim);
+        ssaveperbulan(loaded.nokartu, tempmon);
+        ssavepertahun(loaded.nokartu, tempyear);
     }
     else if (Opsibank == '2')
     {
-        transferother(loaded, out, &temp, in, &templim);
+        transferother(loaded, &temp, in, &templim, monin, yearin, &tempmon, &tempyear);
         ssavekartu(loaded.nokartu, temp);
         ssavelimit(loaded.nokartu, templim);
+        ssaveperbulan(loaded.nokartu, tempmon);
+        ssavepertahun(loaded.nokartu, tempyear);
     }
     else
     {
@@ -515,7 +720,7 @@ void OpsiBank(akun loaded, datket out, akun * kondisibaru, limit in, limit* outl
     }
 }
 
-void pembayaranPDAM(akun saldo, datket info, akun * kondisibaru)
+void pembayaranPDAM(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
     char nomorPDAM[25];
     int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 250000};
@@ -541,14 +746,16 @@ void pembayaranPDAM(akun saldo, datket info, akun * kondisibaru)
     {
         saldo.saldo -= totalBayar;
         kondisibaru->saldo = saldo.saldo;
+        *monout = monin;
+        *yearout = yearin;
+        monout->keluar = totalBayar;
+        yearout->keluar = totalBayar;
         printf("\nPembayaran Berhasil.\n");
         printf("Jenis Tagihan       : PDAM\n");
         printf("Nomor Tujuan        : %s\n", nomorPDAM);
         printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar[angka_acak]);
         printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
         printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
-        info.transaksi = totalBayar;
-        strcpy(info.ket, "PDAM");
     }
     else
     {
@@ -559,7 +766,7 @@ void pembayaranPDAM(akun saldo, datket info, akun * kondisibaru)
   
 }
 
-void pembayaranPLN(akun saldo, datket info, akun * kondisibaru)
+void pembayaranPLN(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin,mutasi* monout , mutasi* yearout)
 {
     char nomorPLN[25];
     int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 25000};
@@ -588,6 +795,10 @@ void pembayaranPLN(akun saldo, datket info, akun * kondisibaru)
     {
         saldo.saldo -= totalBayar;
         kondisibaru->saldo = saldo.saldo;
+        *monout = monin;
+        *yearout = yearin;
+        monout->keluar = totalBayar;
+        yearout->keluar = totalBayar;
         printf("\nPembayaran Berhasil.\n");
         printf("Jenis Tagihan       : PLN\n");
         printf("Nomor Tujuan        : %s\n", nomorPLN);
@@ -595,8 +806,6 @@ void pembayaranPLN(akun saldo, datket info, akun * kondisibaru)
         printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
         printf("Total Bayar         : Rp. %d\n", totalBayar);
         printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
-        info.transaksi = totalBayar;
-        strcpy(info.ket, "PLN");
     }
     else
     {
@@ -607,7 +816,7 @@ void pembayaranPLN(akun saldo, datket info, akun * kondisibaru)
 
 }
 
-void pembayaranPajak(akun saldo, datket info, akun * kondisibaru)
+void pembayaranPajak(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin,mutasi* monout , mutasi* yearout)
 {
     char nomorNPWP[25];
     int jumlahBayar[10] = {25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 225000, 25000};
@@ -629,6 +838,10 @@ void pembayaranPajak(akun saldo, datket info, akun * kondisibaru)
     {
         saldo.saldo -= totalBayar;
         kondisibaru->saldo = saldo.saldo;
+        *monout = monin;
+        *yearout = yearin;
+        monout->keluar = totalBayar;
+        yearout->keluar = totalBayar;
         printf("\nPembayaran Berhasil.\n");
         printf("Jenis Tagihan       : Pajak\n");
         printf("Nomor Tujuan        : %s\n", nomorNPWP);
@@ -636,8 +849,8 @@ void pembayaranPajak(akun saldo, datket info, akun * kondisibaru)
         printf("Biaya Administrasi  : Rp. %d\n", biayaAdmin);
         printf("Total Bayar         : Rp. %d\n", totalBayar);
         printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
-        info.transaksi = totalBayar;
-        strcpy(info.ket, "Pajak");
+        //info.transaksi = totalBayar;
+        //strcpy(info.ket, "Pajak");
     }
     else
     {
@@ -647,7 +860,7 @@ void pembayaranPajak(akun saldo, datket info, akun * kondisibaru)
     }
 }
 
-void pembayaranPulsa(akun saldo, datket info, akun * kondisibaru)
+void pembayaranPulsa(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
     char nomorHP[14];
     int jumlahBayar;
@@ -672,14 +885,18 @@ void pembayaranPulsa(akun saldo, datket info, akun * kondisibaru)
     {
         saldo.saldo -= totalBayar;
         kondisibaru->saldo = saldo.saldo;
+        *monout = monin;
+        *yearout = yearin;
+        monout->keluar = totalBayar;
+        yearout->keluar = totalBayar;
         printf("\nPembayaran Berhasil.\n");
         printf("Jenis Tagihan       : Pajak\n");
         printf("Nomor Telepon       : %s\n", nomorHP);
         printf("Jumlah Tagihan      : Rp.%d\n", jumlahBayar);
         printf("Biaya Administrasi  : Rp.%d\n", biayaAdmin);
         printf("Sisa Saldo Anda     : Rp.%d\n", saldo.saldo);
-        info.transaksi = totalBayar;
-        strcpy(info.ket, "Pulsa");
+        //info.transaksi = totalBayar;
+        //strcpy(info.ket, "Pulsa");
     }
     else
     {
@@ -690,12 +907,16 @@ void pembayaranPulsa(akun saldo, datket info, akun * kondisibaru)
 
 }
 
-void pembayaranTagihan(akun saldo, datket out, akun * kondisibaru)
+void pembayaranTagihan(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monout , mutasi* yearout)
 {
     retry:
     sloadkartu(saldo.nokartu, &saldo);
     akun temp;
+    mutasi tempmon;
+    mutasi tempyear;
     *kondisibaru = temp;
+    *monout = tempmon;
+    *yearout = tempmon;
     int pilihan;
     char nomorPDAM[25];
     char nomorPLN[25];
@@ -714,16 +935,24 @@ void pembayaranTagihan(akun saldo, datket out, akun * kondisibaru)
     fflush(stdin);
     
     if(pilihan == 1){
-        pembayaranPDAM(saldo, out, &temp);
+        pembayaranPDAM(saldo, &temp, monin, yearin, &tempmon, &tempyear);
+        ssaveperbulan(saldo.nokartu, tempmon);
+        ssavepertahun(saldo.nokartu, tempyear);
     }
     else if (pilihan == 2){
-        pembayaranPLN(saldo, out, &temp);
+        pembayaranPLN(saldo, &temp, monin, yearin, &tempmon, &tempyear);
+        ssaveperbulan(saldo.nokartu, tempmon);
+        ssavepertahun(saldo.nokartu, tempyear);
     }
     else if (pilihan == 3){
-        pembayaranPajak(saldo, out, &temp);
+        pembayaranPajak(saldo, &temp, monin, yearin, &tempmon, &tempyear);
+        ssaveperbulan(saldo.nokartu, tempmon);
+        ssavepertahun(saldo.nokartu, tempyear);
     }
     else if (pilihan == 4){
-        pembayaranPulsa(saldo, out, &temp);
+        pembayaranPulsa(saldo, &temp, monin, yearin, &tempmon, &tempyear);
+        ssaveperbulan(saldo.nokartu, tempmon);
+        ssavepertahun(saldo.nokartu, tempyear);
     }
     else
     {
@@ -732,9 +961,11 @@ void pembayaranTagihan(akun saldo, datket out, akun * kondisibaru)
     }
 }    
 
-void setorTunai(akun saldo, datket info, akun * kondisibaru)
+void setorTunai(akun saldo, akun * kondisibaru, mutasi monin, mutasi yearin, mutasi* monthly, mutasi* yearly)
 {
     int nominalSetor;
+    *monthly = monin;
+    *yearly = yearin;
 
     printf("\nMasukkan Jumlah Uang yang Akan Disetor (Kelipatan Rp.50.000): ");
     retry:
@@ -748,9 +979,9 @@ void setorTunai(akun saldo, datket info, akun * kondisibaru)
 
     saldo.saldo += nominalSetor;
     kondisibaru->saldo = saldo.saldo;
+    monthly->masuk = nominalSetor;
+    yearly->masuk = nominalSetor;
     printf("Setoran Sebesar Rp.%d Berhasil. Saldo Anda Sekarang adalah: Rp.%d\n", nominalSetor, saldo.saldo);
-    info.transaksi = nominalSetor;
-    strcpy(info.ket, "Setor Tunai");
 }
 
 void newPW(akun edit)
@@ -846,7 +1077,7 @@ void informasi(akun read)
 	printf("\nGmail kartu anda adalah %s", read.gmail);
 }
 
-void menu(akun loaded, datket out, limit loadedlim)
+void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly)
 {
     waktu saatini;
     sloadkartu(loaded.nokartu, &loaded);
@@ -854,25 +1085,29 @@ void menu(akun loaded, datket out, limit loadedlim)
     if(loaded.statuskartu == 1)
     {
         retry:
+        akun temp = loaded;
+        limit templim = loadedlim;
+        mutasi tempmon = monthly;
+        mutasi tempyear = yearly;
+        int statuslimit = ceklimit(loaded, loadedlim);
         getsaatini(&saatini.tgl, &saatini.bln, &saatini.thn);
+        resetbulan(loaded.nokartu, monthly, saatini);
+        resettahun(loaded.nokartu, yearly, saatini);
+        resetlimit(loaded.nokartu, templim, saatini);
         system("cls");
 
-        int statuslimit = ceklimit(loaded, loadedlim);
-
+        sloadperbulan(loaded.nokartu, &monthly);
+        sloadpertahun(loaded.nokartu, &yearly);
         sloadlimit(loaded.nokartu, &loadedlim);
         sloadkartu(loaded.nokartu, &loaded);
-        printf("Tgl limit %d\nTf Hari ini %d\nNokartu limit %s\n", loadedlim.tgl, loadedlim.tfhariini, loadedlim.nokartu);
 
         int width = 80;
         char str[] = "MENU";
         char opsi;
-        akun temp = loaded;
-        limit templim = loadedlim;
         
         int length = sizeof(str) - 1;
         int pad = (length >= width) ? 0 : (width - length) / 2;
         
-        resetlimit(loaded.nokartu, templim, saatini);
 
         printf("%*.*s%s\n", pad, pad, " ", str);
         printf("\n1. Cek Saldo\n");
@@ -893,19 +1128,23 @@ void menu(akun loaded, datket out, limit loadedlim)
         }
         else if(opsi == '2')
         {
-            tarikTunai(loaded, out, &temp);
+            tarikTunai(loaded, &temp, monthly, yearly, &tempmon, &tempyear);
             ssavekartu(loaded.nokartu, temp);
+            ssaveperbulan(loaded.nokartu, tempmon);
+            ssavepertahun(loaded.nokartu, tempyear);
         }
         else if(opsi == '3')
         {
-            setorTunai(loaded, out, &temp);
+            setorTunai(loaded, &temp, monthly, yearly, &tempmon, &tempyear);
             ssavekartu(loaded.nokartu, temp);
+            ssaveperbulan(loaded.nokartu, tempmon);
+            ssavepertahun(loaded.nokartu, tempyear);
         }
         else if(opsi == '4')
         {
             if(statuslimit == 0)
             {
-                OpsiBank(loaded, out, &temp, loadedlim, &templim);
+                OpsiBank(loaded, &temp, loadedlim, &templim, monthly, yearly, &tempmon, &tempyear);
             }
             else
             {
@@ -916,12 +1155,14 @@ void menu(akun loaded, datket out, limit loadedlim)
         }
         else if(opsi == '5')
         {
-            pembayaranTagihan(loaded, out, &temp);
+            pembayaranTagihan(loaded, &temp, monthly, yearly, &tempmon, &tempyear);
         }
         else if(opsi == '6')
         {
-            VA(loaded, out, &temp);
+            VA(loaded, &temp, monthly, yearly, &tempmon, &tempyear);
             ssavekartu(loaded.nokartu, temp);
+            ssaveperbulan(loaded.nokartu, tempmon);
+            ssavepertahun(loaded.nokartu, tempyear);
         }
         else if(opsi == '7' )
         {
@@ -929,7 +1170,7 @@ void menu(akun loaded, datket out, limit loadedlim)
         }
         else if (opsi == '8')
         {
-            opsimutasi();
+            opsimutasi(monthly, yearly);
         }
         else if (opsi == '9')
         {
@@ -962,6 +1203,20 @@ void gettgl(int * tgl)
     *tgl = hariini.tm_mday;
 }
 
+void getbln(int * bln)
+{
+    time_t getwaktu = time(NULL);
+	struct tm hariini = *localtime(&getwaktu);
+    *bln = hariini.tm_mon + 1;
+}
+
+void getthn(int * thn)
+{
+    time_t getwaktu = time(NULL);
+	struct tm hariini = *localtime(&getwaktu);
+    *thn = hariini.tm_year + 1900;
+}
+
 void generatornokartu(char nokartu[17])
 {
 	printf("\nHarap tunggu (Pembuatan nomor kartu)...");
@@ -986,6 +1241,8 @@ void generatornorek(char norek[11])
 void buatakun(akun * new)
 {
     limit newlim;
+    mutasi monthly;
+    mutasi yearly;
     printf("Masukan nama anda:\n");
     fgets(new->nama, sizeof(new->nama), stdin);
 	new->nama[strcspn(new->nama, "\n")] = 0;
@@ -1021,6 +1278,18 @@ void buatakun(akun * new)
     newlim.tfhariini = 0;
 
     savelimit(newlim);
+
+    strcpy(monthly.nokartu, new->nokartu);
+    getbln(&monthly.periode);
+    monthly.masuk = 0;
+    monthly.keluar = 0;
+    newmonthlymutasi(monthly);
+
+    strcpy(yearly.nokartu, new->nokartu);
+    getbln(&yearly.periode);
+    yearly.masuk = 0;
+    yearly.keluar = 0;
+    newyearlymutasi(yearly);
 	
 	printf("\nNomor kartu anda adalah %s", new->nokartu);
 	printf("\nNomor rekening anda adalah %s", new->norek);
@@ -1032,12 +1301,14 @@ void buatakun(akun * new)
 	printf("\nGmail kartu anda adalah %s", new->gmail);
 }
 
-void login(akun* diload, limit* loadedlim)
+void login(akun* diload, limit* loadedlim, mutasi* monthly, mutasi* yearly)
 {
     char nokartuisi[17];
     char pininput[7];
     akun temp;
     limit templim;
+    mutasi tempmon;
+    mutasi tempyear;
     int i = 1;
     
     isikartu:
@@ -1045,8 +1316,10 @@ void login(akun* diload, limit* loadedlim)
     fgets(nokartuisi, sizeof(nokartuisi), stdin);
     nokartuisi[strcspn(nokartuisi, "\n")] = 0;
     fflush(stdin);
-    sloadkartu(nokartuisi,&temp);
+    sloadkartu(nokartuisi, &temp);
     sloadlimit(nokartuisi, &templim);
+    sloadperbulan(nokartuisi, &tempmon);
+    sloadpertahun(nokartuisi, &tempyear);
     if(strcmp(nokartuisi, temp.nokartu) == 0)
     {
 		if(temp.statuskartu == 0)
@@ -1065,6 +1338,8 @@ void login(akun* diload, limit* loadedlim)
                     printf("\nPin Benar");
 					*diload = temp;
                     *loadedlim = templim;
+                    *monthly = tempmon;
+                    *yearly = tempyear;
                     goto done;
                 } else
                 printf("Pin Salah!, Masukan Pin kembali!\n");

@@ -25,12 +25,6 @@ typedef struct
 
 typedef struct
 {
-    int transaksi;
-    char ket[19];
-} datket;
-
-typedef struct
-{
     int tgl;
     int bln;
     int thn;
@@ -39,8 +33,7 @@ typedef struct
 typedef struct
 {
     char nokartu[17];
-    datket datatf;
-    waktu timemutasi;
+    int transaksi[2];
 } mutasi;
 
 typedef struct
@@ -72,15 +65,25 @@ void blokirakun(char kartu[17]);
 
 void bukablokirakun(char kartu[17]);
 
-void monthlymutasi();
+void newmonthlymutasi(mutasi inm);
 
-void yearlymutasi();
+void newyearlymutasi(mutasi iny);
+
+void resettahun(char carikartu[17], mutasi in, waktu saatini);
+
+void resetbulan(char carikartu[17], mutasi in, waktu saatini);
 
 void getsaatini(int*hari, int* bulan, int* tahun);
 
-void opsimutasi();
+void gettgl(int * tgl);
 
-void menu(akun loaded, datket out, limit loadedlim);
+void getbln(int * bln);
+
+void getthn(int * thn);
+
+void opsimutasi(mutasi mon, mutasi year);
+
+void menu(akun loaded, limit loadedlim, mutasi monthly, mutasi yearly);
 
 void generatornokartu(char nokartu[17]);
 
@@ -88,23 +91,23 @@ void generatornorek(char norek[11]);
 
 void buatakun(akun * new);
 
-void login(akun* diload, limit* loadedlim);
+void login(akun* diload, limit* loadedlim, mutasi* monthly, mutasi* yearly);
 
 void masukKartuATM();
 
-int VA(int* saldo, datket info);
+int VA(int* saldo);
 
-void tarikTunai(akun saldo, datket info, akun * kondisibaru);
+void tarikTunai(akun saldo, akun * kondisibaru);
 
 void cekSaldo(int saldo);
 
-void OpsiBank(akun loaded, datket out, akun * kondisibaru, limit in, limit* outlim);
+void OpsiBank(akun loaded, akun * kondisibaru, limit in, limit* outlim);
 
-void transferBCA(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim);
+void transferBCA(akun saldo, akun * kondisibaru, limit in, limit* outlim);
 
-void transferother(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim);
+void transferother(akun saldo, akun * kondisibaru, limit in, limit* outlim);
 
-void setorTunai(akun saldo, datket info, akun * kondisibaru);
+void setorTunai(akun saldo, akun * kondisibaru);
 
 int Biayaadmin(int saldo, int tipekartu);
 
@@ -116,17 +119,17 @@ void changegmail(char kriteriaemail[50],char emailbaru[50]);
 
 void MenuPelayanan();
 
-void pembayaranPDAM(akun saldo, datket info, akun * kondisibaru);
+void pembayaranPDAM(akun saldo, akun * kondisibaru);
 
-void pembayaranPLN(akun saldo, datket info, akun * kondisibaru);
+void pembayaranPLN(akun saldo, akun * kondisibaru);
 
-void pembayaranPajak(akun saldo, datket info, akun * kondisibaru);
+void pembayaranPajak(akun saldo, akun * kondisibaru);
 
-void pembayaranPulsa(akun saldo, datket info, akun * kondisibaru);
+void pembayaranPulsa(akun saldo, akun * kondisibaru);
 
-void pembayaranTagihan(akun saldo, datket info, akun * kondisibaru);
+void pembayaranTagihan(akun saldo, akun * kondisibaru);
 
-void pembayaranTagihan(akun saldo, datket info, akun * kondisibaru);
+void pembayaranTagihan(akun saldo, akun * kondisibaru);
 
 void informasi(akun read);
 

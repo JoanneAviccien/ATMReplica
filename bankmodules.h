@@ -7,6 +7,10 @@
 #include <windows.h>
 #include <time.h>
 
+#define TIPE1 10000000
+#define TIPE2 20000000
+#define TIPE3 50000000
+
 typedef struct
 {
     char nokartu[17];
@@ -39,9 +43,26 @@ typedef struct
     waktu timemutasi;
 } mutasi;
 
+typedef struct
+{
+    char nokartu[17];
+    int tgl;
+    int tfhariini;
+} limit;
+
 void Logo();
 
 void saveakun(akun write);
+
+void savelimit(limit in);
+
+void sloadlimit(char carikartu[17], limit * output);
+
+void ssavelimit(char carikartu[17], limit input);
+
+void resetlimit(limit in, waktu hariini);
+
+int ceklimit(akun in, limit inlim);
 
 void sloadkartu(char carikartu[17], akun * foundacc);
 
@@ -59,7 +80,7 @@ void getsaatini(int*hari, int* bulan, int* tahun);
 
 void opsimutasi();
 
-void menu(akun loaded, datket out);
+void menu(akun loaded, datket out, limit loadedlim);
 
 void generatornokartu(char nokartu[17]);
 
@@ -67,7 +88,7 @@ void generatornorek(char norek[11]);
 
 void buatakun(akun * new);
 
-void login(akun* diload);
+void login(akun* diload, limit* loadedlim);
 
 void masukKartuATM();
 
@@ -77,11 +98,11 @@ void tarikTunai(akun saldo, datket info, akun * kondisibaru);
 
 void cekSaldo(int saldo);
 
-char OpsiBank();
+void OpsiBank(akun loaded, datket out, akun * kondisibaru, limit in, limit* outlim);
 
-void transferBCA(akun saldo, datket info, akun * kondisibaru);
+void transferBCA(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim);
 
-void transferother(akun saldo, datket info, akun * kondisibaru);
+void transferother(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim);
 
 void setorTunai(akun saldo, datket info, akun * kondisibaru);
 

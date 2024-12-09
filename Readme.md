@@ -30,7 +30,7 @@ Replica ATM ini merupakan tugas besar dari mata kuliah dasar-dasar pemrograman s
 - [x] Fitur Penarikan Tunai
 - [x] Fitur Pembayaran
 - [ ] Fitur daftar mutasi per periode
-- [ ] Limit Transfer
+- [x] Limit Transfer
 - [x] Fitur Pelayanan
 - [x] Fitur login
 

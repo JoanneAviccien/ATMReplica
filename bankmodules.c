@@ -7,6 +7,10 @@
 #include <windows.h>
 #include <time.h>
 
+#define TIPE1 10000000
+#define TIPE2 20000000
+#define TIPE3 50000000
+
 typedef struct
 {
     char nokartu[17];
@@ -38,6 +42,13 @@ typedef struct
     datket datatf;
     waktu periode;
 } mutasi;
+
+typedef struct
+{
+    char nokartu[17];
+    int tgl;
+    int tfhariini;
+} limit;
 
 void Logo() {
 printf("+______________________________+\n");
@@ -78,7 +89,8 @@ void sloadkartu(char carikartu[17], akun * foundacc)
         fread(&temp, sizeof(akun), 1, load);
         if(strcmp(temp.nokartu, carikartu) == 0 )
         {
-            *foundacc = temp; 
+            *foundacc = temp;
+            break;
         }
     }  
 
@@ -260,8 +272,139 @@ void cekSaldo(int saldo)
     printf("Saldo Anda Saat Ini Adalah: Rp.%d", saldo);
 }
 
+void savelimit(limit in)
+{
+    FILE* save = fopen("datalimit.bin", "ab+");
+    if(save == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+        
+    fwrite(&in, sizeof(limit), 1, save);
+    fclose(save);
+}
 
-void transferBCA(akun saldo, datket info, akun * kondisibaru)
+void sloadlimit(char carikartu[17], limit * output)
+{	
+    limit temp;
+
+	FILE* load = fopen("datalimit.bin", "rb+");
+    if(load == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+
+    while(!feof(load))
+    {
+        fread(&temp, sizeof(limit), 1, load);
+        if(strcmp(temp.nokartu, carikartu) == 0 )
+        {
+            *output = temp;
+            break;
+        }
+    }
+
+    fclose(load);
+}
+
+void ssavelimit(char carikartu[17], limit input)
+{
+    int countline = 0;
+    limit temp;
+    limit combined = input;
+	
+	FILE* save = fopen("datalimit.bin", "rb+");
+    if(save == NULL)
+    {
+        perror("Data tidak berhasil diakses!");
+    }
+	
+	while(strcmp(temp.nokartu, carikartu) != 0)
+    {
+        fread(&temp, sizeof(limit), 1, save);
+		countline++;
+    }
+    combined.tfhariini += temp.tfhariini;
+	fseek(save, 0, SEEK_SET);
+	fseek(save, (countline-1)*sizeof(limit), SEEK_SET);
+	fwrite(&combined, sizeof(limit), 1, save);
+	fflush(save);	
+
+    fclose(save);
+}
+
+void resetlimit(char carikartu[17], limit in, waktu hariini)
+{
+    if (hariini.tgl != in.tgl)
+    {
+        limit out;
+        strcpy(out.nokartu, in.nokartu);
+        out.tgl = hariini.tgl;
+        out.tfhariini = 0;
+
+        limit temp;
+        int countline = 0;
+
+        FILE* reset = fopen("datalimit.bin","rb+");
+        if(reset == NULL)
+        {
+            perror("Data tidak berhasil diakses!");
+        }
+        
+        while(strcmp(temp.nokartu, carikartu) != 0)
+        {
+            fread(&temp, sizeof(limit), 1, reset);
+            countline++;
+        }
+        fseek(reset, 0, SEEK_SET);
+        fseek(reset, (countline-1)*sizeof(limit), SEEK_SET);
+        fwrite(&out, sizeof(limit), 1, reset);
+        fflush(reset);
+        fclose(reset);	
+    }
+
+}
+
+int ceklimit(akun in, limit inlim)
+{
+    if(in.tipekartu == 1)
+    {
+        if(inlim.tfhariini >= TIPE1)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    else if(in.tipekartu == 2)
+    {
+        if(inlim.tfhariini >= TIPE2)
+        {
+            
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    else if(in.tipekartu == 3)
+    {
+        if(inlim.tfhariini >= TIPE3)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+}
+
+void transferBCA(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim)
 {
     akun tujuan;
     char norektujuan[17];
@@ -282,12 +425,14 @@ void transferBCA(akun saldo, datket info, akun * kondisibaru)
         {
             saldo.saldo -= jumlahTransfer;
             *kondisibaru = saldo;
+            *outlim = in;
             kondisibaru->saldo = saldo.saldo;
             tujuan.saldo += jumlahTransfer;
+            outlim->tfhariini = jumlahTransfer;
             printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
             printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
-            info.transaksi = jumlahTransfer;
-            strcpy(info.ket, "Transfer BCA");
+            out.transaksi = jumlahTransfer;
+            strcpy(out.ket, "Transfer BCA");
             ssavekartu(tujuan.nokartu, tujuan);
         } 
         else
@@ -303,7 +448,7 @@ void transferBCA(akun saldo, datket info, akun * kondisibaru)
     }
 }
 
-void transferother(akun saldo, datket info, akun * kondisibaru)
+void transferother(akun saldo, datket out, akun * kondisibaru, limit in, limit* outlim)
 {
 
     char norektujuan[20];
@@ -322,12 +467,14 @@ void transferother(akun saldo, datket info, akun * kondisibaru)
     {
         jumlahTransfer = jumlahTransfer + 5000;
         *kondisibaru = saldo;
+        *outlim = in;
         saldo.saldo -= jumlahTransfer;
+        outlim->tfhariini = jumlahTransfer - 5000;
         kondisibaru->saldo = saldo.saldo;
-        printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer, norektujuan);
+        printf("Transfer Sebesar Rp.%d Ke Rekening %s Berhasil !\n", jumlahTransfer-(5000), norektujuan);
         printf("Sisa Saldo Anda Adalah: Rp.%d\n", saldo.saldo);
-        info.transaksi = jumlahTransfer;
-        strcpy(info.ket, "Transfer Bank lain");
+        out.transaksi = jumlahTransfer;
+        strcpy(out.ket, "Transfer Bank lain");
     } 
     else
     {
@@ -335,12 +482,15 @@ void transferother(akun saldo, datket info, akun * kondisibaru)
     }
 }
 
-void OpsiBank(akun loaded, datket out, akun * kondisibaru)
+void OpsiBank(akun loaded, datket out, akun * kondisibaru, limit in, limit* outlim)
 {
     retry:
     sloadkartu(loaded.nokartu, &loaded);
     akun temp;
+    limit templim;
     *kondisibaru = temp;
+    *outlim = templim;
+    
     char Opsibank;
     printf("1. Transfer sesama Bank \n2. Transfer Beda Bank \n");
     printf("Masukkan Pilihan: ");
@@ -348,13 +498,15 @@ void OpsiBank(akun loaded, datket out, akun * kondisibaru)
     fflush(stdin);
     if(Opsibank == '1')
     {
-        transferBCA(loaded, out, &temp);
+        transferBCA(loaded, out, &temp, in, &templim);
         ssavekartu(loaded.nokartu, temp);
+        ssavelimit(loaded.nokartu, templim);
     }
     else if (Opsibank == '2')
     {
-        transferother(loaded, out, &temp);
+        transferother(loaded, out, &temp, in, &templim);
         ssavekartu(loaded.nokartu, temp);
+        ssavelimit(loaded.nokartu, templim);
     }
     else
     {
@@ -694,21 +846,33 @@ void informasi(akun read)
 	printf("\nGmail kartu anda adalah %s", read.gmail);
 }
 
-void menu(akun loaded, datket out)
+void menu(akun loaded, datket out, limit loadedlim)
 {
+    waktu saatini;
     sloadkartu(loaded.nokartu, &loaded);
+    sloadlimit(loaded.nokartu, &loadedlim);
     if(loaded.statuskartu == 1)
     {
         retry:
+        getsaatini(&saatini.tgl, &saatini.bln, &saatini.thn);
+        system("cls");
+
+        int statuslimit = ceklimit(loaded, loadedlim);
+
+        sloadlimit(loaded.nokartu, &loadedlim);
         sloadkartu(loaded.nokartu, &loaded);
+        printf("Tgl limit %d\nTf Hari ini %d\nNokartu limit %s\n", loadedlim.tgl, loadedlim.tfhariini, loadedlim.nokartu);
+
         int width = 80;
         char str[] = "MENU";
         char opsi;
         akun temp = loaded;
-            
+        limit templim = loadedlim;
+        
         int length = sizeof(str) - 1;
         int pad = (length >= width) ? 0 : (width - length) / 2;
         
+        resetlimit(loaded.nokartu, templim, saatini);
 
         printf("%*.*s%s\n", pad, pad, " ", str);
         printf("\n1. Cek Saldo\n");
@@ -739,7 +903,16 @@ void menu(akun loaded, datket out)
         }
         else if(opsi == '4')
         {
-            OpsiBank(loaded, out, &temp);
+            if(statuslimit == 0)
+            {
+                OpsiBank(loaded, out, &temp, loadedlim, &templim);
+            }
+            else
+            {
+                printf("\nAnda sudah melebihi batas transfer perhari!\n");
+                Sleep(3500);
+                goto retry;
+            }
         }
         else if(opsi == '5')
         {
@@ -782,6 +955,13 @@ void menu(akun loaded, datket out)
     }
 }
 
+void gettgl(int * tgl)
+{
+    time_t getwaktu = time(NULL);
+	struct tm hariini = *localtime(&getwaktu);
+    *tgl = hariini.tm_mday;
+}
+
 void generatornokartu(char nokartu[17])
 {
 	printf("\nHarap tunggu (Pembuatan nomor kartu)...");
@@ -805,6 +985,7 @@ void generatornorek(char norek[11])
 
 void buatakun(akun * new)
 {
+    limit newlim;
     printf("Masukan nama anda:\n");
     fgets(new->nama, sizeof(new->nama), stdin);
 	new->nama[strcspn(new->nama, "\n")] = 0;
@@ -834,6 +1015,12 @@ void buatakun(akun * new)
 
     generatornokartu(new->nokartu);
     generatornorek(new->norek);
+    
+    strcpy(newlim.nokartu, new->nokartu);
+    gettgl(&newlim.tgl);
+    newlim.tfhariini = 0;
+
+    savelimit(newlim);
 	
 	printf("\nNomor kartu anda adalah %s", new->nokartu);
 	printf("\nNomor rekening anda adalah %s", new->norek);
@@ -843,14 +1030,14 @@ void buatakun(akun * new)
 	printf("\nTipe kartu anda adalah %d", new->tipekartu);
 	printf("\nStatus kartu anda adalah %d", new->statuskartu);
 	printf("\nGmail kartu anda adalah %s", new->gmail);
-
 }
 
-void login(akun* diload)
+void login(akun* diload, limit* loadedlim)
 {
     char nokartuisi[17];
     char pininput[7];
     akun temp;
+    limit templim;
     int i = 1;
     
     isikartu:
@@ -859,6 +1046,7 @@ void login(akun* diload)
     nokartuisi[strcspn(nokartuisi, "\n")] = 0;
     fflush(stdin);
     sloadkartu(nokartuisi,&temp);
+    sloadlimit(nokartuisi, &templim);
     if(strcmp(nokartuisi, temp.nokartu) == 0)
     {
 		if(temp.statuskartu == 0)
@@ -876,6 +1064,7 @@ void login(akun* diload)
                 {
                     printf("\nPin Benar");
 					*diload = temp;
+                    *loadedlim = templim;
                     goto done;
                 } else
                 printf("Pin Salah!, Masukan Pin kembali!\n");
@@ -895,6 +1084,10 @@ void masukKartuATM()
 {
 	char masukKartu;
     akun regis;
+    waktu sekarang;
+
+    getsaatini(&sekarang.tgl, &sekarang.bln, &sekarang.thn);
+    printf("\n%d/%02d/%d\n", sekarang.tgl, sekarang.bln, sekarang.thn);
 	printf("SELAMAT DATANG DI ATM BANK BAWA CUAN AMAN\n\n");
 	printf("SILAHKAN MASUKKAN KARTU ANDA...\n");
 	

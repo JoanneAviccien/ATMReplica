@@ -9,6 +9,7 @@ int main()
 	waktu saatini;
 	akun loaded;
 	datket transaksi;
+	limit loadedlim;
 	char retry;
 
 
@@ -16,12 +17,13 @@ int main()
 	Logo();
 	getsaatini(&saatini.tgl, &saatini.bln, &saatini.thn);
 	masukKartuATM();
-	login(&loaded);
+	login(&loaded, &loadedlim);
+
 	menu:
 	if(loaded.statuskartu == 1)
 	{
 		system("cls");
-		menu(loaded, transaksi);
+		menu(loaded, transaksi, loadedlim);
 	} else
 	{
 		exit(1);
@@ -29,7 +31,7 @@ int main()
 	printf("\nLakukan Transaksi Lagi? (Y/N) ");
 	retry = fgetc(stdin);
 	fflush(stdin);
-	if(retry == 'Y' || retry == 'y')
+	if(retry == 'Y' || retry == 'y' || retry == '\n')
 	{
 
 		goto menu;

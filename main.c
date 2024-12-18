@@ -29,6 +29,8 @@ int main()
 	{
 		exit(1);
 	}
+
+	retryinput:
 	printf("\nLakukan Transaksi Lagi? (Y/N) ");
 	retry = fgetc(stdin);
 	fflush(stdin);
@@ -45,7 +47,7 @@ int main()
 	} else
 	{
 		printf("\nMasukan opsi yang sesuai!\n'Y' Untuk kembali melakukan transaksi\n'N' Untuk keluar");
-		exit(1);
+		goto retryinput;
 	}
 
 	return 0;

@@ -47,6 +47,8 @@ void Logo();
 
 void saveakun(akun write);
 
+void sloadnorek(char carinorek[11], akun * foundacc);
+
 void sloadkartu(char carikartu[17], akun * foundacc);
 
 void ssavekartu(char carikartu[17], akun insertacc);
